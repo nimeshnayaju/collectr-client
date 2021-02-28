@@ -1,9 +1,46 @@
-import axios from 'axios';
+import http from "../http-common";
 
 class CatalogService {
-     getAll = async () => {
+
+    getAll = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/catalogs');
+            const response = await http.get("/catalogs");
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    get = async (id) => {
+         try {
+             const response = await http.get(`/catalogs/${id}`);
+             return response.data;
+         } catch (err) {
+             console.log(err);
+         }
+    }
+
+    update = async (id, data) => {
+        try {
+            const response = await http.put(`/catalogs/${id}`, data);
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    add = async (data) => {
+        try {
+            const response = await http.post("/catalogs", data);
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    delete = async (id) => {
+        try {
+            const response = await http.delete(`/catalogs/${id}`);
             return response.data;
         } catch (err) {
             console.log(err);

@@ -5,7 +5,9 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import CatalogList from "./components/catalog-list.component";
-import Index from "./components/index.component";
+import Home from "./components/home.component";
+import CatalogDetail from "./components/catalog-detail.component";
+import CatalogAddUpdate from "./components/catalog-add-update.component";
 
 
 class App extends Component {
@@ -23,16 +25,16 @@ class App extends Component {
                                     <Link to="/catalogs">All catalogs</Link>
                                 </li>
                                 <li>
-                                    <a href="/items">All Items</a>
+                                    <Link to="/items">All Items</Link>
                                 </li>
                                 <li>
                                     <hr />
                                 </li>
                                 <li>
-                                    <a href="/catalogs">Add a new catalog</a>
+                                    <Link to="/catalogs/add">Add a new catalog</Link>
                                 </li>
                                 <li>
-                                    <a href="/items">Add a new item</a>
+                                    <Link to="/items">Add a new item</Link>
                                 </li>
                             </ul>
                         </div>
@@ -40,8 +42,10 @@ class App extends Component {
 
                         <div className="col-sm-9 mt-3">
                             <Switch>
-                                <Route exact path="/" component={ Index } />
+                                <Route exact path="/" component={ Home } />
                                 <Route exact path="/catalogs" component={ CatalogList } />
+                                <Route exact path={["/catalogs/update/:id", "/catalogs/add"]} component={ CatalogAddUpdate } />
+                                <Route path="/catalogs/:id" component={ CatalogDetail } />
                             </Switch>
                         </div>
                     </div>
