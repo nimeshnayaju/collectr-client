@@ -17,3 +17,11 @@
     padding-top: .6rem;
     padding-bottom: .2rem;
 }
+
+.login-form {
+    width: 100%;
+    max-width: 430px;
+    padding: 15px;
+    margin: auto;
+    height: 100%;
+}
