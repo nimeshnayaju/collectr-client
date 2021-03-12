@@ -11,7 +11,7 @@ import ItemList from "./components/lists/ItemList";
 import CatalogList from './components/lists/CatalogList';
 import ModalForm from './components/modals/Modal';
 
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Form, FormGroup, Input } from 'reactstrap';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 
 class App extends Component {
