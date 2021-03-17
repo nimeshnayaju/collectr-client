@@ -1,38 +1,27 @@
 import React, { Component } from 'react';
 import { Table, Button, Row } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
-import ItemService from '../../services/ItemService';
 import CatalogService from '../../services/CatalogService';
-
-import ModalForm from '../modals/Modal';
+import ItemService from '../../services/ItemService';
 
 export default class CatalogList extends Component {
 
     state = {
-        catalogId: null,
-        catalog: null,
         items: []
     }
 
     componentDidMount = async() => {
-        await this.setState({ catalogId: this.props.match.params.id });
-        await this.getItems();
-    }
-
-    getItems = async () => {
-        try {
-            const response = await this.getCatalog(this.state.catalogId);
-            this.setState({ items: response.items });
-        } catch (err) {
-            console.log(err);
+        if (this.props.match.params.id) {
+            const items = await this.getItems(this.props.match.params.id);
+            this.setState({ items: items });
         }
     }
 
-    getCatalog = async(id) => {
+    getItems = async(id) => {
         try {
-            const response = await CatalogService.get(id);
-            await this.setState({ catalog: response });
-            return response;
+            const catalog = await CatalogService.get(id);
+            return catalog.items;
         } catch (err) {
             console.log(err);
         }
@@ -55,24 +44,19 @@ export default class CatalogList extends Component {
         this.setState({ items: updatedList });
     }
 
-    updateState = (item) => {
-        const itemIndex = this.state.items.findIndex(data => data._id === item._id)
-        const updatedList = [
-          ...this.state.items.slice(0, itemIndex), item, ...this.state.items.slice(itemIndex + 1)
-        ]
-        this.setState({ items: updatedList })
-    }
-
     render() {
-
         const items = this.state.items && this.state.items.map(item => {
             return (
                 <tr key={ item._id }>
                     <td>{ item.name }</td>
                     <td>
                         <Row className="float-right">
-                            <ModalForm label="Update" updateState={this.updateState} modalTitle="Update Item"  isCatalog={ false } item = { item } catalogId={ this.state.catalogId } />
-                            <Button className="ml-4" size="sm" variant="outline-danger" onClick={() => this.deleteItem(item._id)}>Delete</Button>
+
+                            <Link to={{pathname: "/items/update", item: item}} >
+                                <Button variant="outline-success" size="sm">Update</Button>
+                            </Link>
+
+                            <Button className="ml-2" size="sm" variant="outline-danger" onClick={() => this.deleteItem(item._id)}>Delete</Button>
                         </Row>
                     </td>
                 </tr>

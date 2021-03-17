@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Button, Form, FormGroup, FormLabel, FormControl } from 'react-bootstrap';
+import { Redirect } from 'react-router';
+import { Button, Form, FormGroup, FormLabel, FormControl, Row, Col } from 'react-bootstrap';
 
 import ItemService from "../../services/ItemService";
 import CatalogService from "../../services/CatalogService";
@@ -11,7 +12,8 @@ export default class ItemAddUpdate extends Component {
         manufacturer: "",
         catalogName: null,
         catalogId: null,
-        catalogs: []
+        catalogs: [],
+        submitted: false
     }
 
     onChange = e => {
@@ -26,19 +28,20 @@ export default class ItemAddUpdate extends Component {
         });
     }
 
-    submitAdd = async(e) => {
+    submitForm = async(e) => {
         e.preventDefault();
+        this.props.location.catalog ? this.submitUpdate() : this.submitAdd();
+        await this.setState({ submitted: true });
+    }
+
+    submitAdd = async(e) => {
         let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId };
         await this.addItem(data);
-        this.props.onClick();
     }
 
     submitUpdate = async(e) => {
-        e.preventDefault();
         let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId };
-        const updatedItem = await this.updateItem(this.state.id, data);
-        this.props.updateState(updatedItem);
-        this.props.onClick();
+        await this.updateItem(this.state.id, data);
     }
 
     addItem = async(data) => {
@@ -80,29 +83,38 @@ export default class ItemAddUpdate extends Component {
     }
 
     render() {
-
+        if (this.state.submitted) {
+            console.log(this.state);
+            return <Redirect to={{ pathname: `/catalogs/${this.state.catalogId}`}} />
+        }
         return (
-            <Form onSubmit={ this.props.item ? this.submitUpdate : this.submitAdd }>
+            <Form onSubmit={ this.submitForm }>
 
-                <FormGroup>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl type="text" name="name" onChange={ this.onChange } value={this.state.name} />
+                <FormGroup as={Row}>
+                    <FormLabel column sm="2">Name</FormLabel>
+                    <Col sm="10">
+                        <FormControl type="text" name="name" onChange={ this.onChange } value={this.state.name} />
+                    </Col>
                 </FormGroup>
 
-                <FormGroup>
-                    <FormLabel>Manufacturer</FormLabel>
-                    <FormControl type="text" name="manufacturer" onChange={ this.onChange } value={this.state.manufacturer} />
+                <FormGroup as={Row}>
+                    <FormLabel column sm="2">Manufacturer</FormLabel>
+                    <Col sm="10">
+                        <FormControl type="text" name="manufacturer" onChange={ this.onChange } value={this.state.manufacturer} />
+                    </Col>
                 </FormGroup>
 
                 { !this.props.item ? 
-                <FormGroup>
-                    <FormLabel>Catalog</FormLabel>
-                    <FormControl onChange={ this.onChangeCatalog } value={ this.state.catalogName } as="select">
-                        <option selected>Select a catalog</option>
-                        { this.state.catalogs.map((catalog) => {
-                        return <option data-id={ catalog._id }>{ catalog.name }</option> 
-                        }) }
-                    </FormControl>
+                <FormGroup as={Row}>
+                    <FormLabel column sm="2">Catalog</FormLabel>
+                    <Col sm="10">
+                        <FormControl onChange={ this.onChangeCatalog } value={ this.state.catalogName } as="select">
+                            <option selected>Select a catalog</option>
+                            { this.state.catalogs.map((catalog) => {
+                            return <option data-id={ catalog._id }>{ catalog.name }</option> 
+                            }) }
+                        </FormControl>
+                    </Col>
                 </FormGroup> : null }
                 
                 <Button type="submit">Submit</Button>

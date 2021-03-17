@@ -46,6 +46,15 @@ class CatalogService {
             console.log(err);
         }
     }
+
+    search = async (query) => {
+        try {
+            const response = await http.post(`/catalogs/search/?`);
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
 }
 
 export default new CatalogService();

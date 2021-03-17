@@ -3,7 +3,6 @@ import { Table, Button, Row } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import CatalogService from '../../services/CatalogService';
-import ModalForm from '../modals/Modal';
 
 export default class CatalogList extends Component {
 
@@ -52,20 +51,23 @@ export default class CatalogList extends Component {
     
 
     render() {
-
         const catalogs = this.state.catalogs && this.state.catalogs.map(catalog => {
             return (
                 <tr key={ catalog._id }>
                     <td>
-                        <Link to={"/items/" + catalog._id}>
+                        <Link to={{pathname: `/catalogs/${catalog._id}`, items: catalog.items }}>
                             {catalog.name}
                         </Link> 
                     </td>
                     
                     <td>
                         <Row className="float-right">
-                            <ModalForm label="Update" updateState={this.updateState} modalTitle="Update Catalog"  isCatalog={ true } catalog = { catalog } />
-                            <Button className="ml-4" size="sm" variant="outline-danger" onClick={() => this.deleteCatalog(catalog._id)}>Delete</Button>
+
+                            <Link to={{pathname: "/catalogs/update", catalog: catalog}} >
+                                <Button variant="outline-success" size="sm">Update</Button>
+                            </Link>
+
+                            <Button className="ml-2" size="sm" variant="outline-danger" onClick={() => this.deleteCatalog(catalog._id)}>Delete</Button>
                         </Row>
                     </td>
                 </tr>
