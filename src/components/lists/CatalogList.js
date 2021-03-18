@@ -81,8 +81,12 @@ export default class CatalogList extends Component {
             )
         })
 
+        const searchFilters = this.state.catalogs[0] && Object.keys(this.state.catalogs[0]);
         return (
+
             <Row>
+                {/* Search filter */}         
+                
                 {/* Search */}
                 <Col sm={12}>
                     <Form onSubmit={ this.submitSearch }>
