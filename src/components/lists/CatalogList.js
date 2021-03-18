@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Row } from 'react-bootstrap';
+import { Table, Button, Form, Row, InputGroup, Col, FormControl } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import CatalogService from '../../services/CatalogService';
@@ -7,7 +7,9 @@ import CatalogService from '../../services/CatalogService';
 export default class CatalogList extends Component {
 
     state = {
-        catalogs: []
+        catalogs: [],
+        catalogsToShow: [],
+        query: ''
     }
 
     componentDidMount = async() => {
@@ -17,7 +19,7 @@ export default class CatalogList extends Component {
     getCatalogs = async () => {
         try {
             const response = await CatalogService.getAll();
-            this.setState({ catalogs: response });
+            this.setState({ catalogs: response, catalogsToShow: response });
         } catch (err) {
             console.log(err);
         }
@@ -38,20 +40,25 @@ export default class CatalogList extends Component {
 
     deleteCatalogFromState = (id) => {
         const updatedList = this.state.catalogs.filter(data => data._id !== id);
-        this.setState({ catalogs: updatedList });
+        this.setState({ catalogs: updatedList, catalogsToShow: updatedList });
     }
 
-    updateState = (catalog) => {
-        const catalogIndex = this.state.catalogs.findIndex(data => data._id === catalog._id)
-        const updatedList = [
-          ...this.state.catalogs.slice(0, catalogIndex), catalog, ...this.state.catalogs.slice(catalogIndex + 1)
-        ]
-        this.setState({ catalogs: updatedList })
+    submitSearch = async (e) => {
+        e.preventDefault();
+        // const query = {name: "Vintage Guitar", description: "Hello"};
+        // const results = await CatalogService.search("Vintage Guitar");
+        const results = this.state.catalogs.filter((row) => row.name.toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
+        this.setState({ catalogsToShow: results });
+    }
+
+    onChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
     }
     
 
     render() {
-        const catalogs = this.state.catalogs && this.state.catalogs.map(catalog => {
+        
+        const catalogs = this.state.catalogsToShow && this.state.catalogsToShow.map(catalog => {
             return (
                 <tr key={ catalog._id }>
                     <td>
@@ -76,14 +83,27 @@ export default class CatalogList extends Component {
 
         return (
             <Row>
-                <h5>All Catalogs</h5>
-                <Table>
-                    <tbody>
-                        { catalogs }
-                    </tbody>
-                </Table>
+                {/* Search */}
+                <Col sm={12}>
+                    <Form onSubmit={ this.submitSearch }>
+                        <InputGroup className="mb-3">
+                            <FormControl name="query" onChange={ this.onChange } placeholder="Search for catalogs"/>
+                            <InputGroup.Append>
+                                <Button type="submit" variant="outline-secondary">Search</Button>
+                            </InputGroup.Append>
+                        </InputGroup>
+                    </Form>
+                </Col>
+
+                {/* Catalog List */}
+                <Col>
+                    <Table>
+                        <tbody>
+                            { catalogs }
+                        </tbody>
+                    </Table>
+                </Col>
             </Row>
         )
-
     }
 }

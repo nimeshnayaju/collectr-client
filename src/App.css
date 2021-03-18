@@ -4,14 +4,6 @@
     list-style: none;
 }
 
-.sidebar-nav li .row {
-    display: contents;
-}
-
-.table {
-    border-top: 1px solid #dee2e6;
-}
-
 .table td {
     border: none;
     padding-top: .6rem;

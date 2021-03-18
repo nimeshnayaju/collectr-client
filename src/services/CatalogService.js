@@ -47,9 +47,11 @@ class CatalogService {
         }
     }
 
-    search = async (query) => {
+    search = async (name) => {
         try {
-            const response = await http.post(`/catalogs/search/?`);
+            console.log(name);
+            const response = await http.post(`/catalogs/search/?name=${name}`);
+            console.log(response);
             return response.data;
         } catch (err) {
             console.log(err);

@@ -72,13 +72,12 @@ export default class ItemAddUpdate extends Component {
     componentDidMount = async() => {
         await this.getCatalogs();
         // If Item exists, populate the state with the Item object received from props
-        if (this.props.item) {
-            const { name, manufacturer } = this.props.item;
-            const { catalogId } = this.props;
-            
-            const catalogName = this.state.catalogs.find(data => data._id === catalogId).name;
+        if (this.props.location.item) {
+            const { _id, name, manufacturer } = this.props.location.item;
+            // const { catalogId } = this.props;
+            // const catalogName = this.state.catalogs.find(data => data._id === catalogId)?.name;
 
-            await this.setState({ id: this.props.item._id, name, manufacturer, catalogId, catalogName });
+            await this.setState({ id: _id, name, manufacturer });
         }
     }
 
@@ -104,7 +103,7 @@ export default class ItemAddUpdate extends Component {
                     </Col>
                 </FormGroup>
 
-                { !this.props.item ? 
+                { !this.props.location.item ? 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Catalog</FormLabel>
                     <Col sm="10">
