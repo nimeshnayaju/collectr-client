@@ -1,38 +1,30 @@
 import React, { Component } from 'react';
-import { Table, Button, Row } from 'react-bootstrap';
+import { Table, Button, Form, Row, InputGroup, Col, FormControl, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
-import ItemService from '../../services/ItemService';
 import CatalogService from '../../services/CatalogService';
-
-import ModalForm from '../modals/Modal';
+import ItemService from '../../services/ItemService';
 
 export default class CatalogList extends Component {
 
     state = {
-        catalogId: null,
-        catalog: null,
-        items: []
+        items: [],
+        itemsToShow: [],
+        query: '',
+        searchFilter: ''
     }
 
     componentDidMount = async() => {
-        await this.setState({ catalogId: this.props.match.params.id });
-        await this.getItems();
-    }
-
-    getItems = async () => {
-        try {
-            const response = await this.getCatalog(this.state.catalogId);
-            this.setState({ items: response.items });
-        } catch (err) {
-            console.log(err);
+        if (this.props.match.params.id) {
+            const items = await this.getItems(this.props.match.params.id);
+            this.setState({ items: items, itemsToShow: items  });
         }
     }
 
-    getCatalog = async(id) => {
+    getItems = async(id) => {
         try {
-            const response = await CatalogService.get(id);
-            await this.setState({ catalog: response });
-            return response;
+            const catalog = await CatalogService.get(id);
+            return catalog.items;
         } catch (err) {
             console.log(err);
         }
@@ -52,41 +44,90 @@ export default class CatalogList extends Component {
 
     deleteItemFromState = (id) => {
         const updatedList = this.state.items.filter(data => data._id !== id);
-        this.setState({ items: updatedList });
+        this.setState({ items: updatedList, itemsToShow: updatedList });
     }
 
-    updateState = (item) => {
-        const itemIndex = this.state.items.findIndex(data => data._id === item._id)
-        const updatedList = [
-          ...this.state.items.slice(0, itemIndex), item, ...this.state.items.slice(itemIndex + 1)
-        ]
-        this.setState({ items: updatedList })
+    submitSearch = async (e) => {
+        e.preventDefault();
+        // default search filter = "name"
+        let filter = "name"
+        filter = this.state.searchFilter !== '' ? this.state.searchFilter : filter;
+        const results = this.state.items && this.state.items.filter((item) => item[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
+        this.setState({ itemsToShow: results });
+    }
+
+    onChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
+    
+    onSelectDropdown = e => {
+        if (e.target.innerText.toLowerCase() === 'clear filter') {
+            this.setState({ searchFilter: '' });
+        } else {
+            this.setState({ searchFilter: e.target.innerText });
+        }
     }
 
     render() {
-
-        const items = this.state.items && this.state.items.map(item => {
+        const items = this.state.itemsToShow && this.state.itemsToShow.map(item => {
             return (
                 <tr key={ item._id }>
-                    <td>{ item.name }</td>
+                    <td>
+                        <Link to={{pathname: `/items/${item._id}`, item: item }}>
+                            {item.name}
+                        </Link> 
+                    </td>
                     <td>
                         <Row className="float-right">
-                            <ModalForm label="Update" updateState={this.updateState} modalTitle="Update Item"  isCatalog={ false } item = { item } catalogId={ this.state.catalogId } />
-                            <Button className="ml-4" size="sm" variant="outline-danger" onClick={() => this.deleteItem(item._id)}>Delete</Button>
+
+                            <Link to={{pathname: "/items/update", item: item}} >
+                                <Button variant="outline-success" size="sm">Update</Button>
+                            </Link>
+
+                            <Button className="ml-2" size="sm" variant="outline-danger" onClick={() => this.deleteItem(item._id)}>Delete</Button>
                         </Row>
                     </td>
                 </tr>
             )
         })
 
+        const searchFilters = this.state.items && this.state.items[0] && Object.keys(this.state.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items");
+
         return (
             <Row>
-                <h5>All Items</h5>
-                <Table>
-                    <tbody>
-                        { items }
-                    </tbody>
-                </Table>
+                {/* Search */}
+                <Col sm={12}>
+                    <Form onSubmit={ this.submitSearch }>
+                        <InputGroup className="mb-3 search-inputgroup">
+
+                            {/* Search filter dropdown */}
+                            <DropdownButton as={InputGroup.Prepend} variant="outline-info" title= { this.state.searchFilter !== '' ? this.state.searchFilter : "Search filter" } >
+                                { searchFilters && searchFilters.map((filter) => {
+                                    return <Dropdown.Item onClick={ this.onSelectDropdown }>{ filter }</Dropdown.Item>
+                                }) }
+                                <Dropdown.Divider />
+                                <Dropdown.Item onClick={ this.onSelectDropdown }> Clear Filter </Dropdown.Item>
+                            </DropdownButton>
+
+                            {/* Input area */}
+                            <FormControl autocomplete="off" name="query" onChange={ this.onChange } placeholder="Search for items"/>
+
+                            {/* Search button */}
+                            <InputGroup.Append>
+                                <Button type="submit" variant="outline-secondary">Search</Button>
+                            </InputGroup.Append>
+                        </InputGroup>
+                    </Form>
+                </Col>
+
+                {/* Item List */}
+                <Col>
+                    <Table>
+                        <tbody>
+                            { items }
+                        </tbody>
+                    </Table>
+                </Col>
             </Row>
         )
 

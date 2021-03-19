@@ -1,12 +1,13 @@
 import {Component} from "react/cjs/react.production.min";
+import { Row } from "react-bootstrap";
 
 export default class Index extends Component {
     render() {
         return (
-            <div>
-                <h2>Welcome to Collectr</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem cupiditate illo ipsa magnam molestias non pariatur tempora ut. Hic modi natus porro quibusdam rem repellendus sequi sit soluta, vitae voluptates!</p>
-            </div>
+            <Row>
+                <h2>Collectr</h2>
+                <p>Collectr provides a platform for collecters to share information about their collectibles with other collecters.</p>
+            </Row>
         )
     }
 }

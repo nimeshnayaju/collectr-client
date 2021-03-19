@@ -9,9 +9,12 @@ import "./App.css";
 import Home from "./components/Home";
 import ItemList from "./components/lists/ItemList";
 import CatalogList from './components/lists/CatalogList';
-import ModalForm from './components/modals/Modal';
+import CatalogAddUpdate from './components/forms/CatalogAddUpdate';
+import ItemAddUpdate from './components/forms/ItemAddUpdate';
 
 class App extends Component {
+
+
     render() {
         return (
             <Router>
@@ -21,7 +24,7 @@ class App extends Component {
                         <Col sm={3}>
                             <ul className="sidebar-nav">
                                 <li>
-                                    <a href="/">Home</a>
+                                    <Link to="/">Home</Link>
                                 </li>
                                 <li>
                                     <Link to="/catalogs">All catalogs</Link>
@@ -30,10 +33,10 @@ class App extends Component {
                                     <hr />
                                 </li>
                                 <li>
-                                    <ModalForm label="Add" modalTitle="Add catalog" isCatalog={ true }/>
+                                    <Link to="/catalogs/add">Add catalog</Link>
                                 </li>
                                 <li>
-                                    <ModalForm label="Add" modalTitle="Add item" isCatalog={ false }/>
+                                    <Link to="/items/add">Add item</Link>
                                 </li>
                             </ul>
                         </Col>
@@ -41,9 +44,12 @@ class App extends Component {
                         {/* Content Area */}
                         <Col sm={9}>
                             <Switch>
-                                    <Route exact path="/" component={ Home } />
-                                    <Route exact path="/catalogs" component={ CatalogList } />
-                                    <Route exact path="/items/:id" component={ ItemList } />
+                                <Route exact path="/" component={ Home } />
+                                <Route exact path="/catalogs" component={ CatalogList } />
+                                <Route exact path={["/catalogs/update", "/catalogs/add"]} component={ CatalogAddUpdate } />
+                                <Route exact path="/catalogs/:id" component={ ItemList } />
+                                <Route exact path={["/items/update", "/items/add"]} component={ ItemAddUpdate } />
+                                {/* <Route exact path="/items/:id" component={ ItemDetail } /> */}
                             </Switch>
                         </Col>
                     </Row>
