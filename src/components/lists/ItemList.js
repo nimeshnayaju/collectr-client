@@ -48,7 +48,9 @@ export default class CatalogList extends Component {
         const items = this.state.items && this.state.items.map(item => {
             return (
                 <tr key={ item._id }>
-                    <td>{ item.name }</td>
+                    <td>
+                        <Link to={{pathname:`/items/${item._id }`}}>{ item.name }</Link>
+                    </td>
                     <td>
                         <Row className="float-right">
 
