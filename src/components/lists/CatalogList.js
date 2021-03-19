@@ -46,10 +46,10 @@ export default class CatalogList extends Component {
 
     submitSearch = async (e) => {
         e.preventDefault();
-        if (this.state.searchFilter !== '') {
-            const results = this.state.catalogs && this.state.catalogs.filter((catalog) => catalog[this.state.searchFilter.toLowerCase()].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
-            this.setState({ catalogsToShow: results });
-        }
+        let filter = "name"
+        filter = this.state.searchFilter !== '' ? this.state.searchFilter.toLowerCase() : filter;
+        const results = this.state.catalogs && this.state.catalogs.filter((catalog) => catalog[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
+        this.setState({ catalogsToShow: results });
     }
 
     onChange = e => {
@@ -57,7 +57,7 @@ export default class CatalogList extends Component {
     }
     
     onSelectDropdown = e => {
-        if (e.target.innerText.toLowerCase() === 'clear search') {
+        if (e.target.innerText.toLowerCase() === 'clear filter') {
             this.setState({ searchFilter: '' });
         } else {
             this.setState({ searchFilter: e.target.innerText });
@@ -106,7 +106,7 @@ export default class CatalogList extends Component {
                                     return <Dropdown.Item onClick={ this.onSelectDropdown }>{ filter }</Dropdown.Item>
                                 }) }
                                 <Dropdown.Divider />
-                                <Dropdown.Item onClick={ this.onSelectDropdown }> Clear Search </Dropdown.Item>
+                                <Dropdown.Item onClick={ this.onSelectDropdown }> Clear Filter </Dropdown.Item>
                             </DropdownButton>
 
                             {/* Input area */}
