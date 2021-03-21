@@ -123,8 +123,6 @@ export default class CatalogList extends Component {
                 </Col>
 
                 {/* Catalog */}
-
-                {/* <Card border="dark" style={{ width: '18rem' }}> */}
                 <Col sm={12}>
                     <Card border="dark" sm={12}>
                         <Card.Header>{this.state.catalog && this.state.catalog.name.toUpperCase() }</Card.Header>

@@ -34,7 +34,7 @@ export default class ItemDetail extends Component {
                 <h5>{ item.name.toUpperCase() }</h5>
                 <hr />
                 <Table>
-                    <p>Manufacturer: { item.manufacturer }</p>
+                    <p>Manufacturer: { this.state.item && item.manufacturer }</p>
                     <p>Description: { 'description' }</p>
                 </Table>
                 
