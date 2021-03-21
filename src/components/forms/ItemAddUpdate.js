@@ -30,23 +30,28 @@ export default class ItemAddUpdate extends Component {
 
     submitForm = async(e) => {
         e.preventDefault();
-        this.props.location.catalog ? this.submitUpdate() : this.submitAdd();
-        await this.setState({ submitted: true });
+        let item;
+        if (this.props.location.item) {
+            item = await this.submitUpdate()
+        } else {
+            item = await this.submitAdd();
+        }
+        await this.setState({ id: item._id, submitted: true });
     }
 
     submitAdd = async(e) => {
         let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId };
-        await this.addItem(data);
+        return await this.addItem(data);
     }
 
     submitUpdate = async(e) => {
         let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId };
-        await this.updateItem(this.state.id, data);
+        return await this.updateItem(this.state.id, data);
     }
 
     addItem = async(data) => {
         try {
-            await ItemService.add(data);
+            return await ItemService.add(data);
         } catch (err) {
             console.log(err);
         }
@@ -83,11 +88,10 @@ export default class ItemAddUpdate extends Component {
 
     render() {
         if (this.state.submitted) {
-            console.log(this.state);
-            return <Redirect to={{ pathname: `/catalogs/${this.state.catalogId}`}} />
+            return <Redirect to={{ pathname: `/items/${this.state.id}`}} />
         }
         return (
-            <Form onSubmit={ this.submitForm }>
+            <Form autocomplete="off" onSubmit={ this.submitForm }>
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Name</FormLabel>

@@ -66,7 +66,7 @@ export default class CatalogAddUpdate extends Component {
             return <Redirect to={{ pathname: `/catalogs/${this.state.id}`}} />
         }
         return (
-            <Form onSubmit={ this.submitForm }>
+            <Form autocomplete="off" onSubmit={ this.submitForm }>
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Name</FormLabel>

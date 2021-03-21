@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Form, Row, InputGroup, Col, FormControl } from 'react-bootstrap';
+import { Table, Button, Form, Row, InputGroup, Col, FormControl, Dropdown, DropdownButton } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import CatalogService from '../../services/CatalogService';
@@ -9,7 +9,8 @@ export default class CatalogList extends Component {
     state = {
         catalogs: [],
         catalogsToShow: [],
-        query: ''
+        query: '',
+        searchFilter: ''
     }
 
     componentDidMount = async() => {
@@ -45,14 +46,22 @@ export default class CatalogList extends Component {
 
     submitSearch = async (e) => {
         e.preventDefault();
-        // const query = {name: "Vintage Guitar", description: "Hello"};
-        // const results = await CatalogService.search("Vintage Guitar");
-        const results = this.state.catalogs.filter((row) => row.name.toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
+        let filter = "name"
+        filter = this.state.searchFilter !== '' ? this.state.searchFilter.toLowerCase() : filter;
+        const results = this.state.catalogs && this.state.catalogs.filter((catalog) => catalog[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
         this.setState({ catalogsToShow: results });
     }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+    }
+    
+    onSelectDropdown = e => {
+        if (e.target.innerText.toLowerCase() === 'clear filter') {
+            this.setState({ searchFilter: '' });
+        } else {
+            this.setState({ searchFilter: e.target.innerText });
+        }
     }
     
 
@@ -81,13 +90,29 @@ export default class CatalogList extends Component {
             )
         })
 
+        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items");
+        
         return (
-            <Row>
+
+            <Row>                  
                 {/* Search */}
                 <Col sm={12}>
                     <Form onSubmit={ this.submitSearch }>
-                        <InputGroup className="mb-3">
-                            <FormControl name="query" onChange={ this.onChange } placeholder="Search for catalogs"/>
+                        <InputGroup className="mb-3 search-inputgroup">
+
+                            {/* Search filter dropdown */}
+                            <DropdownButton as={InputGroup.Prepend} variant="outline-info" title= { this.state.searchFilter !== '' ? this.state.searchFilter : "Search filter" } >
+                                { searchFilters && searchFilters.map((filter) => {
+                                    return <Dropdown.Item onClick={ this.onSelectDropdown }>{ filter }</Dropdown.Item>
+                                }) }
+                                <Dropdown.Divider />
+                                <Dropdown.Item onClick={ this.onSelectDropdown }> Clear Filter </Dropdown.Item>
+                            </DropdownButton>
+
+                            {/* Input area */}
+                            <FormControl autocomplete="off" name="query" onChange={ this.onChange } placeholder="Search for catalogs"/>
+
+                            {/* Search button */}
                             <InputGroup.Append>
                                 <Button type="submit" variant="outline-secondary">Search</Button>
                             </InputGroup.Append>

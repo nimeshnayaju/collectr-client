@@ -15,6 +15,8 @@ import ItemDetail from './components/details/ItemDetail';
 import CatalogDetail from './components/details/CatalogDetail';
 
 class App extends Component {
+
+
     render() {
         return (
             <Router>
@@ -24,7 +26,7 @@ class App extends Component {
                         <Col sm={3}>
                             <ul className="sidebar-nav">
                                 <li>
-                                    <a href="/">Home</a>
+                                    <Link to="/">Home</Link>
                                 </li>
                                 <li>
                                     <Link to="/catalogs">All catalogs</Link>
@@ -43,14 +45,14 @@ class App extends Component {
 
                         {/* Content Area */}
                         <Col sm={9}>
-                            <Switch>
-                                    <Route exact path="/" component={ Home } />
-                                    <Route exact path="/catalogs" component={ CatalogList } />
-                                    <Route exact path={["/catalogs/update", "/catalogs/add"]} component={ CatalogAddUpdate } />
-                                    <Route exact path="/catalogs/:id" component={ ItemList } />
-                                    <Route exact path={["/items/update", "/items/add"]} component={ ItemAddUpdate } />
-                                    <Route exact path="/items/:id" component={ ItemDetail } />
-                                    <Route exact path="/Catalog/:id" component={ CatalogDetail } />
+                            <Switch>   
+                                <Route exact path="/" component={ Home } />
+                                <Route exact path="/catalogs" component={ CatalogList } />
+                                <Route exact path={["/catalogs/update", "/catalogs/add"]} component={ CatalogAddUpdate } />
+                                <Route exact path="/catalogs/:id" component={ ItemList } />
+                                <Route exact path={["/items/update", "/items/add"]} component={ ItemAddUpdate } />
+                                <Route exact path="/items/:id" component={ ItemDetail } />
+                                <Route exact path="/Catalog/:id" component={ CatalogDetail } />
                             </Switch>
                         </Col>
                     </Row>
