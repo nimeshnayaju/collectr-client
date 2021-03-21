@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Form, Row, InputGroup, Col, FormControl, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Table, Button, Form, Row, InputGroup, Col, FormControl, Dropdown, DropdownButton, Card } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import CatalogService from '../../services/CatalogService';
@@ -8,23 +8,23 @@ import ItemService from '../../services/ItemService';
 export default class CatalogList extends Component {
 
     state = {
-        items: [],
         itemsToShow: [],
         query: '',
-        searchFilter: ''
+        searchFilter: '',
+        catalog: null
     }
 
     componentDidMount = async() => {
         if (this.props.match.params.id) {
-            const items = await this.getItems(this.props.match.params.id);
-            this.setState({ items: items, itemsToShow: items  });
+            const catalog = await this.getCatalog(this.props.match.params.id);
+            this.setState({ catalog: catalog, itemsToShow: catalog.items  });
         }
     }
 
-    getItems = async(id) => {
+    getCatalog = async(id) => {
         try {
             const catalog = await CatalogService.get(id);
-            return catalog.items;
+            return catalog;
         } catch (err) {
             console.log(err);
         }
@@ -43,8 +43,10 @@ export default class CatalogList extends Component {
     }
 
     deleteItemFromState = (id) => {
-        const updatedList = this.state.items.filter(data => data._id !== id);
-        this.setState({ items: updatedList, itemsToShow: updatedList });
+        const updatedList = this.state.catalog.items.filter(data => data._id !== id);
+        let newCatalog = this.state.catalog;
+        newCatalog.items = updatedList;
+        this.setState({ catalog: newCatalog, itemsToShow: updatedList });
     }
 
     submitSearch = async (e) => {
@@ -52,7 +54,7 @@ export default class CatalogList extends Component {
         // default search filter = "name"
         let filter = "name"
         filter = this.state.searchFilter !== '' ? this.state.searchFilter : filter;
-        const results = this.state.items && this.state.items.filter((item) => item[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
+        const results = this.state.catalog.items && this.state.catalog.items.filter((item) => item[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
         this.setState({ itemsToShow: results });
     }
 
@@ -91,7 +93,7 @@ export default class CatalogList extends Component {
             )
         })
 
-        const searchFilters = this.state.items && this.state.items[0] && Object.keys(this.state.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items");
+        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items");
 
         return (
             <Row>
@@ -120,6 +122,22 @@ export default class CatalogList extends Component {
                     </Form>
                 </Col>
 
+                {/* Catalog */}
+
+                {/* <Card border="dark" style={{ width: '18rem' }}> */}
+                <Col sm={12}>
+                    <Card border="dark" sm={12}>
+                        <Card.Header>{this.state.catalog && this.state.catalog.name.toUpperCase() }</Card.Header>
+                        <Card.Body>
+                            <Card.Text>
+                            {this.state.catalog && this.state.catalog.description}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <br />
+                </Col>
+                
+                
                 {/* Item List */}
                 <Col>
                     <Table>

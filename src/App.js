@@ -12,7 +12,6 @@ import CatalogList from './components/lists/CatalogList';
 import CatalogAddUpdate from './components/forms/CatalogAddUpdate';
 import ItemAddUpdate from './components/forms/ItemAddUpdate';
 import ItemDetail from './components/details/ItemDetail';
-import CatalogDetail from './components/details/CatalogDetail';
 
 class App extends Component {
 
@@ -45,14 +44,13 @@ class App extends Component {
 
                         {/* Content Area */}
                         <Col sm={9}>
-                            <Switch>   
+                            <Switch>
                                 <Route exact path="/" component={ Home } />
                                 <Route exact path="/catalogs" component={ CatalogList } />
                                 <Route exact path={["/catalogs/update", "/catalogs/add"]} component={ CatalogAddUpdate } />
                                 <Route exact path="/catalogs/:id" component={ ItemList } />
                                 <Route exact path={["/items/update", "/items/add"]} component={ ItemAddUpdate } />
                                 <Route exact path="/items/:id" component={ ItemDetail } />
-                                <Route exact path="/Catalog/:id" component={ CatalogDetail } />
                             </Switch>
                         </Col>
                     </Row>
