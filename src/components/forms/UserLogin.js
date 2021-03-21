@@ -24,7 +24,7 @@ export default class UserSignup extends Component {
 
     render() {
         return (
-            <Form className="login-form" onSubmit={ this.signUp }>
+            <Form className="login-form" onSubmit={ this.logIn }>
                 <h1>
                     Please log in with an email and password.
                 </h1>
