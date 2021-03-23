@@ -3,6 +3,7 @@ import {Button, Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
 
 import "../../App.css";
 import UserService from "../../services/UserService";
+import useToken from "../hooks/useToken";
 
 export default class UserSignup extends Component {
     state = {
@@ -16,7 +17,8 @@ export default class UserSignup extends Component {
 
     logIn = async (data) => {
         try {
-            await UserService.logIn(data);
+            const token = await UserService.logIn(data);
+            useToken(token);
         } catch (err) {
             console.log(err);
         }
