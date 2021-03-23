@@ -3,12 +3,12 @@ import {Button, Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
 
 import "../../App.css";
 import UserService from "../../services/UserService";
-import useToken from "../hooks/useToken";
 
 export default class UserSignup extends Component {
     state = {
         email: "",
-        password: ""
+        password: "",
+        token: null
     }
 
     onChange = e => {
@@ -17,8 +17,8 @@ export default class UserSignup extends Component {
 
     signUp = async (data) => {
         try {
-            const token = await UserService.signUp(data);
-            useToken(token);
+            await UserService.signUp(data);
+            this.token = UserService.setToken();
         } catch (err) {
             console.log(err);
         }
