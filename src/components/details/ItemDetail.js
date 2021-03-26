@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Table, Row } from 'react-bootstrap';
+import { Button, Table, Row, Col, Card } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import ItemService from '../../services/ItemService';
@@ -30,19 +30,22 @@ export default class ItemDetail extends Component {
     render() {
         const item = this.state;
         const info = (
-            <Row>
-                <h5>{ item.name.toUpperCase() }</h5>
-                <hr />
-                <Table>
-                    <p>Manufacturer: { this.state.item && item.manufacturer }</p>
-                    <p>Description: { 'description' }</p>
-                </Table>
-                
-                <Link to={{pathname: "/catalogs", item: item}} >
-                    <Button variant="outline-secondary" size="sm">Back</Button>{' '}
-                </Link>
+            <Col sm={12}>
+                    <Card border="dark" sm={12}>
+                        <Card.Header>{item.name.toUpperCase() }</Card.Header>
+                        <Card.Body>
+                            <Card.Text>
+                            <p>Manufacturer: { item.manufacturer }</p>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <br />
+                    <Link to={{pathname: "/catalogs", item: item}} >
+                        <Button variant="outline-secondary" size="sm">Back</Button>{' '}
+                    </Link>
                     
-            </Row>
+                    
+                </Col>
         )
 
         return (
