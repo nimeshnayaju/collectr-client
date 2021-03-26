@@ -11,6 +11,7 @@ import ItemList from "./components/lists/ItemList";
 import CatalogList from './components/lists/CatalogList';
 import CatalogAddUpdate from './components/forms/CatalogAddUpdate';
 import ItemAddUpdate from './components/forms/ItemAddUpdate';
+import ItemDetail from './components/details/ItemDetail';
 
 class App extends Component {
 
@@ -49,7 +50,7 @@ class App extends Component {
                                 <Route exact path={["/catalogs/update", "/catalogs/add"]} component={ CatalogAddUpdate } />
                                 <Route exact path="/catalogs/:id" component={ ItemList } />
                                 <Route exact path={["/items/update", "/items/add"]} component={ ItemAddUpdate } />
-                                {/* <Route exact path="/items/:id" component={ ItemDetail } /> */}
+                                <Route exact path="/items/:id" component={ ItemDetail } />
                             </Switch>
                         </Col>
                     </Row>
