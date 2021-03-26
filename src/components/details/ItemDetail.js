@@ -14,7 +14,7 @@ export default class ItemDetail extends Component {
     componentDidMount = async() => {
         if (this.props.match.params.id) {
             const item = await this.getItem(this.props.match.params.id);
-            this.setState({ name: item.name , manufacturer:item.manufacturer});
+            this.setState({ name: item.name , manufacturer: item.manufacturer});
         }
     }
 
@@ -32,10 +32,10 @@ export default class ItemDetail extends Component {
         const info = (
             <Col sm={12}>
                     <Card border="dark" sm={12}>
-                        <Card.Header>{item.name.toUpperCase() }</Card.Header>
+                        <Card.Header>{this.state.name && item.name.toUpperCase() }</Card.Header>
                         <Card.Body>
                             <Card.Text>
-                            <p>Manufacturer: { item.manufacturer }</p>
+                            <p>Manufacturer: { this.state.manufacturer && item.manufacturer }</p>
                             </Card.Text>
                         </Card.Body>
                     </Card>
