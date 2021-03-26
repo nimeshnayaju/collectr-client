@@ -46,7 +46,8 @@ export default class CatalogList extends Component {
 
     submitSearch = async (e) => {
         e.preventDefault();
-        let filter = "name"
+        // default search filter = "name"
+        let filter = "name";
         filter = this.state.searchFilter !== '' ? this.state.searchFilter.toLowerCase() : filter;
         const results = this.state.catalogs && this.state.catalogs.filter((catalog) => catalog[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
         this.setState({ catalogsToShow: results });
