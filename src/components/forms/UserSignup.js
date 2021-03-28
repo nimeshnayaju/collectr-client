@@ -6,19 +6,19 @@ import UserService from "../../services/UserService";
 
 export default class UserSignup extends Component {
     state = {
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
-        token: null
     }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    signUp = async (data) => {
+    signUp = async () => {
         try {
-            await UserService.signUp(data);
-            this.token = UserService.setToken();
+            await UserService.signUp(this.state);
         } catch (err) {
             console.log(err);
         }
@@ -28,8 +28,16 @@ export default class UserSignup extends Component {
         return (
             <Form className="login-form" onSubmit={ this.signUp }>
                 <h1>
-                    Please sign up with an email and password.
+                    Please sign up with a name, email, and password.
                 </h1>
+                <FormGroup>
+                    <FormLabel>First name</FormLabel>
+                    <FormControl type="text" name="first-name" onChange={ this.onChange } value={ this.state.firstName } />
+                </FormGroup>
+                <FormGroup>
+                    <FormLabel>Last name</FormLabel>
+                    <FormControl type="text" name="last-name" onChange={ this.onChange } value={ this.state.lastName } />
+                </FormGroup>
                 <FormGroup>
                     <FormLabel>Email</FormLabel>
                     <FormControl type="email" name="email" onChange={ this.onChange } value={ this.state.email } />

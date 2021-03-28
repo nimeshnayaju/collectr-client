@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Button, Form, FormGroup, FormLabel, FormControl } from 'react-bootstrap';
+import { Redirect } from 'react-router';
+import { Button, Form, FormGroup, FormLabel, FormControl, Row, Col } from 'react-bootstrap';
 
 import ItemService from "../../services/ItemService";
 import CatalogService from "../../services/CatalogService";
@@ -11,7 +12,8 @@ export default class ItemAddUpdate extends Component {
         manufacturer: "",
         catalogName: null,
         catalogId: null,
-        catalogs: []
+        catalogs: [],
+        submitted: false
     }
 
     onChange = e => {
@@ -26,24 +28,30 @@ export default class ItemAddUpdate extends Component {
         });
     }
 
-    submitAdd = async(e) => {
+    submitForm = async(e) => {
         e.preventDefault();
+        let item;
+        if (this.props.location.item) {
+            item = await this.submitUpdate()
+        } else {
+            item = await this.submitAdd();
+        }
+        await this.setState({ id: item._id, submitted: true });
+    }
+
+    submitAdd = async(e) => {
         let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId };
-        await this.addItem(data);
-        this.props.onClick();
+        return await this.addItem(data);
     }
 
     submitUpdate = async(e) => {
-        e.preventDefault();
         let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId };
-        const updatedItem = await this.updateItem(this.state.id, data);
-        this.props.updateState(updatedItem);
-        this.props.onClick();
+        return await this.updateItem(this.state.id, data);
     }
 
     addItem = async(data) => {
         try {
-            await ItemService.add(data);
+            return await ItemService.add(data);
         } catch (err) {
             console.log(err);
         }
@@ -69,45 +77,52 @@ export default class ItemAddUpdate extends Component {
     componentDidMount = async() => {
         await this.getCatalogs();
         // If Item exists, populate the state with the Item object received from props
-        if (this.props.item) {
-            const { name, manufacturer } = this.props.item;
-            const { catalogId } = this.props;
-            
-            const catalogName = this.state.catalogs.find(data => data._id === catalogId).name;
+        if (this.props.location.item) {
+            const { _id, name, manufacturer } = this.props.location.item;
+            // const { catalogId } = this.props;
+            // const catalogName = this.state.catalogs.find(data => data._id === catalogId)?.name;
 
-            await this.setState({ id: this.props.item._id, name, manufacturer, catalogId, catalogName });
+            await this.setState({ id: _id, name, manufacturer });
         }
     }
 
     render() {
-
+        if (this.state.submitted) {
+            return <Redirect to={{ pathname: `/items/${this.state.id}`}} />
+        }
         return (
-            <Form onSubmit={ this.props.item ? this.submitUpdate : this.submitAdd }>
+            <Form autocomplete="off" onSubmit={ this.submitForm }>
 
-                <FormGroup>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl type="text" name="name" onChange={ this.onChange } value={this.state.name} />
+                <FormGroup as={Row}>
+                    <FormLabel column sm="2">Name</FormLabel>
+                    <Col sm="10">
+                        <FormControl type="text" name="name" onChange={ this.onChange } value={this.state.name} />
+                    </Col>
                 </FormGroup>
 
-                <FormGroup>
-                    <FormLabel>Manufacturer</FormLabel>
-                    <FormControl type="text" name="manufacturer" onChange={ this.onChange } value={this.state.manufacturer} />
+                <FormGroup as={Row}>
+                    <FormLabel column sm="2">Manufacturer</FormLabel>
+                    <Col sm="10">
+                        <FormControl type="text" name="manufacturer" onChange={ this.onChange } value={this.state.manufacturer} />
+                    </Col>
                 </FormGroup>
 
-                { !this.props.item ? 
-                <FormGroup>
-                    <FormLabel>Catalog</FormLabel>
-                    <FormControl onChange={ this.onChangeCatalog } value={ this.state.catalogName } as="select">
-                        <option selected>Select a catalog</option>
-                        { this.state.catalogs.map((catalog) => {
-                        return <option data-id={ catalog._id }>{ catalog.name }</option> 
-                        }) }
-                    </FormControl>
-                </FormGroup> : null }
-                
+                { !this.props.location.item ?
+                    <FormGroup as={Row}>
+                        <FormLabel column sm="2">Catalog</FormLabel>
+                        <Col sm="10">
+                            <FormControl onChange={ this.onChangeCatalog } value={ this.state.catalogName } as="select">
+                                <option selected>Select a catalog</option>
+                                { this.state.catalogs.map((catalog) => {
+                                    return <option data-id={ catalog._id }>{ catalog.name }</option>
+                                }) }
+                            </FormControl>
+                        </Col>
+                    </FormGroup> : null }
+
                 <Button type="submit">Submit</Button>
 
             </Form>
         )
-    }   
+    }
 }

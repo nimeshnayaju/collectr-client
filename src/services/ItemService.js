@@ -12,12 +12,12 @@ class ItemService {
     }
 
     get = async (id) => {
-         try {
-             const response = await http.get(`/items/${id}`);
-             return response.data;
-         } catch (err) {
-             console.log(err);
-         }
+        try {
+            const response = await http.get(`/items/${id}`);
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     update = async (id, data) => {

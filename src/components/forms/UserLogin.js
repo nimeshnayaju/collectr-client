@@ -7,18 +7,17 @@ import UserService from "../../services/UserService";
 export default class UserSignup extends Component {
     state = {
         email: "",
-        password: "",
-        token: null
+        password: ""
     }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    logIn = async (data) => {
+    logIn = async () => {
         try {
-            await UserService.logIn(data);
-            this.token = UserService.setToken();
+            const response = await UserService.logIn(this.state);
+            await UserService.setToken(response);
         } catch (err) {
             console.log(err);
         }

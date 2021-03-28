@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { Table, Button, Row } from 'react-bootstrap';
+import { Table, Button, Form, Row, InputGroup, Col, FormControl, Dropdown, DropdownButton } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import CatalogService from '../../services/CatalogService';
-import ModalForm from '../modals/Modal';
 
 export default class CatalogList extends Component {
 
     state = {
-        catalogs: []
+        catalogs: [],
+        catalogsToShow: [],
+        query: '',
+        searchFilter: ''
     }
 
     componentDidMount = async() => {
@@ -18,7 +20,7 @@ export default class CatalogList extends Component {
     getCatalogs = async () => {
         try {
             const response = await CatalogService.getAll();
-            this.setState({ catalogs: response });
+            this.setState({ catalogs: response, catalogsToShow: response });
         } catch (err) {
             console.log(err);
         }
@@ -39,49 +41,95 @@ export default class CatalogList extends Component {
 
     deleteCatalogFromState = (id) => {
         const updatedList = this.state.catalogs.filter(data => data._id !== id);
-        this.setState({ catalogs: updatedList });
+        this.setState({ catalogs: updatedList, catalogsToShow: updatedList });
     }
 
-    updateState = (catalog) => {
-        const catalogIndex = this.state.catalogs.findIndex(data => data._id === catalog._id)
-        const updatedList = [
-          ...this.state.catalogs.slice(0, catalogIndex), catalog, ...this.state.catalogs.slice(catalogIndex + 1)
-        ]
-        this.setState({ catalogs: updatedList })
+    submitSearch = async (e) => {
+        e.preventDefault();
+        // default search filter = "name"
+        let filter = "name";
+        filter = this.state.searchFilter !== '' ? this.state.searchFilter.toLowerCase() : filter;
+        const results = this.state.catalogs && this.state.catalogs.filter((catalog) => catalog[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
+        this.setState({ catalogsToShow: results });
     }
-    
+
+    onChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
+
+    onSelectDropdown = e => {
+        if (e.target.innerText.toLowerCase() === 'clear filter') {
+            this.setState({ searchFilter: '' });
+        } else {
+            this.setState({ searchFilter: e.target.innerText });
+        }
+    }
+
 
     render() {
 
-        const catalogs = this.state.catalogs && this.state.catalogs.map(catalog => {
+        const catalogs = this.state.catalogsToShow && this.state.catalogsToShow.map(catalog => {
             return (
                 <tr key={ catalog._id }>
                     <td>
-                        <Link to={"/items/" + catalog._id}>
+                        <Link to={{pathname: `/catalogs/${catalog._id}`, items: catalog.items }}>
                             {catalog.name}
-                        </Link> 
+                        </Link>
                     </td>
-                    
+
                     <td>
                         <Row className="float-right">
-                            <ModalForm label="Update" updateState={this.updateState} modalTitle="Update Catalog"  isCatalog={ true } catalog = { catalog } />
-                            <Button className="ml-4" size="sm" variant="outline-danger" onClick={() => this.deleteCatalog(catalog._id)}>Delete</Button>
+
+                            <Link to={{pathname: "/catalogs/update", catalog: catalog}} >
+                                <Button variant="outline-success" size="sm">Update</Button>
+                            </Link>
+
+                            <Button className="ml-2" size="sm" variant="outline-danger" onClick={() => this.deleteCatalog(catalog._id)}>Delete</Button>
                         </Row>
                     </td>
                 </tr>
             )
         })
 
+        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items");
+
         return (
+
             <Row>
-                <h5>All Catalogs</h5>
-                <Table>
-                    <tbody>
+                {/* Search */}
+                <Col sm={12}>
+                    <Form onSubmit={ this.submitSearch }>
+                        <InputGroup className="mb-3 search-inputgroup">
+
+                            {/* Search filter dropdown */}
+                            <DropdownButton as={InputGroup.Prepend} variant="outline-info" title= { this.state.searchFilter !== '' ? this.state.searchFilter : "Search filter" } >
+                                { searchFilters && searchFilters.map((filter) => {
+                                    return <Dropdown.Item onClick={ this.onSelectDropdown }>{ filter }</Dropdown.Item>
+                                }) }
+                                <Dropdown.Divider />
+                                <Dropdown.Item onClick={ this.onSelectDropdown }> Clear Filter </Dropdown.Item>
+                            </DropdownButton>
+
+                            {/* Input area */}
+                            <FormControl autocomplete="off" name="query" onChange={ this.onChange } placeholder="Search for catalogs"/>
+
+                            {/* Search button */}
+                            <InputGroup.Append>
+                                <Button type="submit" variant="outline-secondary">Search</Button>
+                            </InputGroup.Append>
+                        </InputGroup>
+                    </Form>
+                </Col>
+
+                {/* Catalog List */}
+                <Col>
+                    <Table>
+                        <tbody>
                         { catalogs }
-                    </tbody>
-                </Table>
+                        </tbody>
+                    </Table>
+                </Col>
             </Row>
         )
-
     }
 }

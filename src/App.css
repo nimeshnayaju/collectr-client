@@ -25,3 +25,7 @@
     margin: auto;
     height: 100%;
 }
+
+.dropdown {
+    text-transform: capitalize;
+}
