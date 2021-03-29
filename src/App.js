@@ -11,12 +11,17 @@ import CatalogList from './components/lists/CatalogList';
 import CatalogAddUpdate from './components/forms/CatalogAddUpdate';
 import ItemAddUpdate from './components/forms/ItemAddUpdate';
 import ItemDetail from './components/details/ItemDetail';
+<<<<<<< HEAD
 import UserLogin from './components/forms/UserLogin';
 import UserSignup from "./components/forms/UserSignup";
 
 import AuthService from "./services/AuthService";
+=======
+>>>>>>> master
 
 class App extends Component {
+
+
     render() {
         
         const isLoggedIn = AuthService.isLoggedIn();
@@ -70,7 +75,7 @@ class App extends Component {
                         <Col sm={3}>
                             <ul className="sidebar-nav">
                                 <li>
-                                    <a href="/">Home</a>
+                                    <Link to="/">Home</Link>
                                 </li>
                                 <li>
                                     <Link to="/catalogs">All catalogs</Link>

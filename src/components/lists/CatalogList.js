@@ -56,7 +56,7 @@ export default class CatalogList extends Component {
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     }
-
+    
     onSelectDropdown = e => {
         if (e.target.innerText.toLowerCase() === 'clear filter') {
             this.setState({ searchFilter: '' });
@@ -64,19 +64,19 @@ export default class CatalogList extends Component {
             this.setState({ searchFilter: e.target.innerText });
         }
     }
-
+    
 
     render() {
-
+        
         const catalogs = this.state.catalogsToShow && this.state.catalogsToShow.map(catalog => {
             return (
                 <tr key={ catalog._id }>
                     <td>
                         <Link to={{pathname: `/catalogs/${catalog._id}`, items: catalog.items }}>
                             {catalog.name}
-                        </Link>
+                        </Link> 
                     </td>
-
+                    
                     <td>
                         <Row className="float-right">
 
@@ -92,10 +92,10 @@ export default class CatalogList extends Component {
         })
 
         const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items");
-
+        
         return (
 
-            <Row>
+            <Row>                  
                 {/* Search */}
                 <Col sm={12}>
                     <Form onSubmit={ this.submitSearch }>
@@ -125,7 +125,7 @@ export default class CatalogList extends Component {
                 <Col>
                     <Table>
                         <tbody>
-                        { catalogs }
+                            { catalogs }
                         </tbody>
                     </Table>
                 </Col>

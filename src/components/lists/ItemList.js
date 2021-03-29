@@ -63,7 +63,11 @@ export default class CatalogList extends Component {
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> master
     onSelectDropdown = e => {
         if (e.target.innerText.toLowerCase() === 'clear filter') {
             this.setState({ searchFilter: '' });
@@ -79,7 +83,11 @@ export default class CatalogList extends Component {
                     <td>
                         <Link to={{pathname: `/items/${item._id}`, item: item }}>
                             {item.name}
+<<<<<<< HEAD
                         </Link>
+=======
+                        </Link> 
+>>>>>>> master
                     </td>
                     <td>
                         <Row className="float-right">
@@ -130,19 +138,32 @@ export default class CatalogList extends Component {
                         <Card.Header>{this.state.catalog && this.state.catalog.name.toUpperCase() }</Card.Header>
                         <Card.Body>
                             <Card.Text>
+<<<<<<< HEAD
                                 {this.state.catalog && this.state.catalog.description}
+=======
+                            {this.state.catalog && this.state.catalog.description}
+>>>>>>> master
                             </Card.Text>
                         </Card.Body>
                     </Card>
                     <br />
                 </Col>
+<<<<<<< HEAD
 
 
+=======
+                
+                
+>>>>>>> master
                 {/* Item List */}
                 <Col>
                     <Table>
                         <tbody>
+<<<<<<< HEAD
                         { items }
+=======
+                            { items }
+>>>>>>> master
                         </tbody>
                     </Table>
                 </Col>

@@ -107,19 +107,19 @@ export default class ItemAddUpdate extends Component {
                     </Col>
                 </FormGroup>
 
-                { !this.props.location.item ?
-                    <FormGroup as={Row}>
-                        <FormLabel column sm="2">Catalog</FormLabel>
-                        <Col sm="10">
-                            <FormControl onChange={ this.onChangeCatalog } value={ this.state.catalogName } as="select">
-                                <option selected>Select a catalog</option>
-                                { this.state.catalogs.map((catalog) => {
-                                    return <option data-id={ catalog._id }>{ catalog.name }</option>
-                                }) }
-                            </FormControl>
-                        </Col>
-                    </FormGroup> : null }
-
+                { !this.props.location.item ? 
+                <FormGroup as={Row}>
+                    <FormLabel column sm="2">Catalog</FormLabel>
+                    <Col sm="10">
+                        <FormControl onChange={ this.onChangeCatalog } value={ this.state.catalogName } as="select">
+                            <option selected>Select a catalog</option>
+                            { this.state.catalogs.map((catalog) => {
+                            return <option data-id={ catalog._id }>{ catalog.name }</option> 
+                            }) }
+                        </FormControl>
+                    </Col>
+                </FormGroup> : null }
+                
                 <Button type="submit">Submit</Button>
 
             </Form>
