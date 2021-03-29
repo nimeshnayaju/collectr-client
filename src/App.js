@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Switch, Route, Link, BrowserRouter as Router} from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
+import { Redirect } from 'react-router';
 
 import "./App.css";
 
@@ -13,14 +14,17 @@ import ItemDetail from './components/details/ItemDetail';
 import UserLogin from './components/forms/UserLogin';
 import UserSignup from "./components/forms/UserSignup";
 
-import UserService from "./services/UserService";
+import AuthService from "./services/AuthService";
 
 class App extends Component {
     render() {
-        const token = UserService.getToken();
+        
+        const isLoggedIn = AuthService.isLoggedIn();
+
+        console.log(isLoggedIn);
 
         // User has not yet logged in and generated an access token
-        if (!token) {
+        if (!isLoggedIn) {
             return (
                 <Router>
                     <Container className="mt-5">
@@ -32,16 +36,13 @@ class App extends Component {
                                         <a href="/">Home</a>
                                     </li>
                                     <li>
-                                        <Link to="/catalogs">All catalogs</Link>
-                                    </li>
-                                    <li>
                                         <hr />
                                     </li>
                                     <li>
-                                        <Link to="/users/login">Log in</Link>
+                                        <Link to="/login">Log in</Link>
                                     </li>
                                     <li>
-                                        <Link to="/users/signup">Sign up</Link>
+                                        <Link to="/signup">Sign up</Link>
                                     </li>
                                 </ul>
                             </Col>
@@ -50,8 +51,8 @@ class App extends Component {
                             <Col sm={9}>
                                 <Switch>
                                     <Route exact path="/" component={Home}/>
-                                    <Route exact path="/users/login" component={UserLogin}/>
-                                    <Route exact path="/users/signup" component={UserSignup}/>
+                                    <Route exact path="/login" component={UserLogin}/>
+                                    <Route exact path="/signup" component={UserSignup}/>
                                 </Switch>
                             </Col>
                         </Row>
