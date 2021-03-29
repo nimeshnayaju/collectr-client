@@ -1,26 +1,26 @@
 import React, {Component} from 'react';
 import {Switch, Route, Link, BrowserRouter as Router} from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import { Redirect } from 'react-router';
 
 import "./App.css";
 
 import Home from "./components/Home";
 import ItemList from "./components/lists/ItemList";
 import CatalogList from './components/lists/CatalogList';
+import PublicCatalogList from './components/lists/PublicCatalogList';
 import CatalogAddUpdate from './components/forms/CatalogAddUpdate';
 import ItemAddUpdate from './components/forms/ItemAddUpdate';
 import ItemDetail from './components/details/ItemDetail';
-<<<<<<< HEAD
 import UserLogin from './components/forms/UserLogin';
 import UserSignup from "./components/forms/UserSignup";
-
 import AuthService from "./services/AuthService";
-=======
->>>>>>> master
 
 class App extends Component {
 
+
+    logout() {
+        AuthService.logout();
+    }
 
     render() {
         
@@ -78,7 +78,10 @@ class App extends Component {
                                     <Link to="/">Home</Link>
                                 </li>
                                 <li>
-                                    <Link to="/catalogs">All catalogs</Link>
+                                    <Link to="/catalogs">All user catalogs</Link>
+                                </li>
+                                <li>
+                                    <Link to={{pathname: "/catalogs/public", public: true }}>All public catalogs</Link>
                                 </li>
                                 <li>
                                     <hr />
@@ -89,6 +92,9 @@ class App extends Component {
                                 <li>
                                     <Link to="/items/add">Add item</Link>
                                 </li>
+                                <li>
+                                    <a href="/login" onClick={this.logout}>Log out</a>
+                                </li>
                             </ul>
                         </Col>
 
@@ -97,6 +103,7 @@ class App extends Component {
                             <Switch>
                                 <Route exact path="/" component={ Home } />
                                 <Route exact path="/catalogs" component={ CatalogList } />
+                                <Route exact path="/catalogs/public" component={ PublicCatalogList } />
                                 <Route exact path={["/catalogs/update", "/catalogs/add"]} component={ CatalogAddUpdate } />
                                 <Route exact path="/catalogs/:id" component={ ItemList } />
                                 <Route exact path={["/items/update", "/items/add"]} component={ ItemAddUpdate } />

@@ -19,7 +19,7 @@ export default class CatalogList extends Component {
 
     getCatalogs = async () => {
         try {
-            const response = await CatalogService.getAll();
+            const response = await CatalogService.getAllPublic();
             this.setState({ catalogs: response, catalogsToShow: response });
         } catch (err) {
             console.log(err);
@@ -75,17 +75,6 @@ export default class CatalogList extends Component {
                         <Link to={{pathname: `/catalogs/${catalog._id}`}}>
                             {catalog.name}
                         </Link> 
-                    </td>
-                    
-                    <td>
-                        <Row className="float-right">
-
-                            <Link to={{pathname: "/catalogs/update", catalog: catalog}} >
-                                <Button variant="outline-success" size="sm">Update</Button>
-                            </Link>
-
-                            <Button className="ml-2" size="sm" variant="outline-danger" onClick={() => this.deleteCatalog(catalog._id)}>Delete</Button>
-                        </Row>
                     </td>
                 </tr>
             )

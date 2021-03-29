@@ -113,7 +113,7 @@ export default class ItemAddUpdate extends Component {
                     <Col sm="10">
                         <FormControl onChange={ this.onChangeCatalog } value={ this.state.catalogName } as="select">
                             <option selected>Select a catalog</option>
-                            { this.state.catalogs.map((catalog) => {
+                            { this.state.catalogs && this.state.catalogs.map((catalog) => {
                             return <option data-id={ catalog._id }>{ catalog.name }</option> 
                             }) }
                         </FormControl>

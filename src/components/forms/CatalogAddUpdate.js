@@ -9,11 +9,18 @@ export default class CatalogAddUpdate extends Component {
         id: null,
         name: "",
         description: "",
+        isPrivate: true,
         submitted: false
     }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+    }
+
+    onChangeRadio = e => {
+        const selectedIndex = e.target.options.selectedIndex;
+        const isPrivate = e.target.options[selectedIndex].getAttribute('data-id') === "true" ? true : false;
+        this.setState({ isPrivate: isPrivate });
     }
 
     submitForm = async(e) => {
@@ -24,11 +31,13 @@ export default class CatalogAddUpdate extends Component {
         } else {
             catalog = await this.submitAdd();
         }
-        await this.setState({ id: catalog._id, submitted: true });
+        if (catalog) {
+            await this.setState({ id: catalog._id, submitted: true });
+        }
     }
 
     submitAdd = async() => {
-        let data = { name: this.state.name, description: this.state.description };
+        let data = { name: this.state.name, description: this.state.description, isPrivate: this.state.isPrivate };
         return await this.addCatalog(data);
     }
 
@@ -79,6 +88,16 @@ export default class CatalogAddUpdate extends Component {
                     <FormLabel column sm="2">Description</FormLabel>
                     <Col sm="10">
                         <FormControl type="text" name="description" onChange={ this.onChange } value={this.state.description} />
+                    </Col>
+                </FormGroup>
+
+                <FormGroup as={Row}>
+                <FormLabel column sm="2">Private</FormLabel>
+                    <Col sm="10">
+                        <FormControl onChange={ this.onChangeRadio } as="select">
+                            <option data-id="true">True</option>
+                            <option data-id="false">False</option>
+                        </FormControl>
                     </Col>
                 </FormGroup>
 
