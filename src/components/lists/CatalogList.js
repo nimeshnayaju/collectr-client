@@ -91,7 +91,7 @@ export default class CatalogList extends Component {
             )
         })
 
-        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items");
+        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items" && key !== "user" && key !== "isPrivate");
         
         return (
 

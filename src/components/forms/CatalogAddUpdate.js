@@ -42,7 +42,7 @@ export default class CatalogAddUpdate extends Component {
     }
 
     submitUpdate = async() => {
-        let data = { name: this.state.name, description: this.state.description };
+        let data = { name: this.state.name, description: this.state.description, isPrivate: this.state.isPrivate };
         return await this.updateCatalog(this.state.id, data);
     }
 

@@ -54,8 +54,7 @@ export default class CatalogList extends Component {
         // default search filter = "name"
         let filter = "name";
         filter = this.state.searchFilter !== '' ? this.state.searchFilter.toLowerCase() : filter;
-        console.log(filter);
-        const results = this.state.items && this.state.items.filter((item) => item[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
+        const results =  this.state.catalog && this.state.catalog.items && this.state.catalog.items.filter((item) => item[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
 
         this.setState({ itemsToShow: results });
     }
@@ -127,7 +126,7 @@ export default class CatalogList extends Component {
                 {/* Catalog */}
                 <Col sm={12}>
                     <Card border="dark" sm={12}>
-                        <Card.Header>{this.state.catalog && this.state.catalog.name.toUpperCase() }</Card.Header>
+                        <Card.Header>{this.state.catalog && this.state.catalog.name }</Card.Header>
                         <Card.Body>
                             <Card.Text>
                             {this.state.catalog && this.state.catalog.description}

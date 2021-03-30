@@ -26,8 +26,6 @@ class App extends Component {
         
         const isLoggedIn = AuthService.isLoggedIn();
 
-        console.log(isLoggedIn);
-
         // User has not yet logged in and generated an access token
         if (!isLoggedIn) {
             return (
