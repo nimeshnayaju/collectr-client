@@ -21,6 +21,16 @@ class CatalogService {
         }
     }
 
+    getCatalogWithPublicItems = async (id) => {
+        try {
+            const response = await http.get(`/catalogs/public/${id}`, { headers: authHeader() });
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
     get = async (id) => {
         try {
             const response = await http.get(`/catalogs/${id}`, { headers: authHeader() });

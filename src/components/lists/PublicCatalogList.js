@@ -89,7 +89,7 @@ export default class CatalogList extends Component {
             return (
                 <tr key={ catalog._id }>
                     <td>
-                        <Link to={{pathname: `/catalogs/${catalog._id}`}}>
+                        <Link to={{pathname: `/catalogs/${catalog._id}/public/items`}}>
                             {catalog.name}
                         </Link> 
                     </td>

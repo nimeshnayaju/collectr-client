@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import CatalogService from '../../services/CatalogService';
 import ItemService from '../../services/ItemService';
 
-export default class CatalogList extends Component {
+export default class PublicItemList extends Component {
 
     state = {
         itemsToShow: [],
@@ -25,7 +25,7 @@ export default class CatalogList extends Component {
 
     getCatalog = async(id) => {
         try {
-            const catalog = await CatalogService.get(id);
+            const catalog = await CatalogService.getCatalogWithPublicItems(id);
             return catalog;
         } catch (err) {
             console.log(err);
@@ -98,16 +98,6 @@ export default class CatalogList extends Component {
                         <Link to={{pathname: `/items/${item._id}`, item: item }}>
                             {item.name}
                         </Link> 
-                    </td>
-                    <td>
-                        <Row className="float-right">
-
-                            <Link to={{pathname: "/items/update", item: item}} >
-                                <Button variant="outline-success" size="sm">Update</Button>
-                            </Link>
-
-                            <Button className="ml-2" size="sm" variant="outline-danger" onClick={() => this.deleteItem(item._id)}>Delete</Button>
-                        </Row>
                     </td>
                 </tr>
             )

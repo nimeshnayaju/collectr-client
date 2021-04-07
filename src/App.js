@@ -8,6 +8,7 @@ import Home from "./components/Home";
 import ItemList from "./components/lists/ItemList";
 import CatalogList from './components/lists/CatalogList';
 import PublicCatalogList from './components/lists/PublicCatalogList';
+import PublicItemList from './components/lists/PublicItemList';
 import CatalogAddUpdate from './components/forms/CatalogAddUpdate';
 import ItemAddUpdate from './components/forms/ItemAddUpdate';
 import ItemDetail from './components/details/ItemDetail';
@@ -104,6 +105,7 @@ class App extends Component {
                                 <Route exact path="/catalogs/public" component={ PublicCatalogList } />
                                 <Route exact path={["/catalogs/update", "/catalogs/add"]} component={ CatalogAddUpdate } />
                                 <Route exact path="/catalogs/:id" component={ ItemList } />
+                                <Route exact path="/catalogs/:id/public/items" component={ PublicItemList } />
                                 <Route exact path={["/items/update", "/items/add"]} component={ ItemAddUpdate } />
                                 <Route exact path="/items/:id" component={ ItemDetail } />
                             </Switch>
