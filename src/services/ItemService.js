@@ -1,28 +1,29 @@
+import authHeader from "../helpers/auth-header";
 import http from "../http-common";
 
 class ItemService {
 
     getAll = async () => {
         try {
-            const response = await http.get("/items");
+            const response = await http.get("/items", { headers: authHeader() });
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    
+    get = async (id) => {
+        try {
+            const response = await http.get(`/items/${id}`, {headers: authHeader() });
             return response.data;
         } catch (err) {
             console.log(err);
         }
     }
 
-    get = async (id) => {
-         try {
-             const response = await http.get(`/items/${id}`);
-             return response.data;
-         } catch (err) {
-             console.log(err);
-         }
-    }
-
     update = async (id, data) => {
         try {
-            const response = await http.put(`/items/${id}`, data);
+            const response = await http.put(`/items/${id}`, data, { headers: authHeader() });
             return response.data;
         } catch (err) {
             console.log(err);
@@ -31,7 +32,7 @@ class ItemService {
 
     add = async (data) => {
         try {
-            const response = await http.post("/items", data);
+            const response = await http.post("/items", data, { headers: authHeader() });
             return response.data;
         } catch (err) {
             console.log(err);
@@ -40,7 +41,7 @@ class ItemService {
 
     delete = async (id) => {
         try {
-            const response = await http.delete(`/items/${id}`);
+            const response = await http.delete(`/items/${id}`, { headers: authHeader() });
             return response.data;
         } catch (err) {
             console.log(err);

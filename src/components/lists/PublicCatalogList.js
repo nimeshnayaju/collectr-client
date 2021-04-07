@@ -19,7 +19,7 @@ export default class CatalogList extends Component {
 
     getCatalogs = async () => {
         try {
-            const response = await CatalogService.getAll();
+            const response = await CatalogService.getAllPublic();
             this.setState({ catalogs: response, catalogsToShow: response });
         } catch (err) {
             console.log(err);
@@ -89,26 +89,15 @@ export default class CatalogList extends Component {
             return (
                 <tr key={ catalog._id }>
                     <td>
-                        <Link to={{pathname: `/catalogs/${catalog._id}`}}>
+                        <Link to={{pathname: `/catalogs/${catalog._id}/public/items`}}>
                             {catalog.name}
                         </Link> 
-                    </td>
-                    
-                    <td>
-                        <Row className="float-right">
-
-                            <Link to={{pathname: "/catalogs/update", catalog: catalog}} >
-                                <Button variant="outline-success" size="sm">Update</Button>
-                            </Link>
-
-                            <Button className="ml-2" size="sm" variant="outline-danger" onClick={() => this.deleteCatalog(catalog._id)}>Delete</Button>
-                        </Row>
                     </td>
                 </tr>
             )
         })
 
-        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items" && key !== "user");
+        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items" && key !=="user");
         
         return (
 

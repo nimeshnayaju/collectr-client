@@ -5,11 +5,11 @@
 }
 
 .table td {
-    border: none;
-    padding-top: .6rem;
-    padding-bottom: .2rem;
+    border: none !important;
+    padding-top: .6rem !important;
+    padding-bottom: .2rem !important;
 }
 
-.dropdown {
+.dropdown button, .dropdown-item {
     text-transform: capitalize;
 }

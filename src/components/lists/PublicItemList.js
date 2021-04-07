@@ -1,47 +1,54 @@
 import React, { Component } from 'react';
-import { Table, Button, Form, Row, InputGroup, Col, FormControl, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Table, Button, Form, Row, InputGroup, Col, FormControl, Dropdown, DropdownButton, Card } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import CatalogService from '../../services/CatalogService';
+import ItemService from '../../services/ItemService';
 
-export default class CatalogList extends Component {
+export default class PublicItemList extends Component {
 
     state = {
-        catalogs: [],
-        catalogsToShow: [],
+        itemsToShow: [],
         query: '',
-        searchFilter: ''
+        searchFilter: '',
+        catalog: null
     }
 
     componentDidMount = async() => {
-        await this.getCatalogs();
+        if (this.props.match.params.id) {
+            const catalog = await this.getCatalog(this.props.match.params.id);
+            if (catalog) {
+                this.setState({ catalog: catalog, itemsToShow: catalog.items  });
+            }
+        }
     }
 
-    getCatalogs = async () => {
+    getCatalog = async(id) => {
         try {
-            const response = await CatalogService.getAll();
-            this.setState({ catalogs: response, catalogsToShow: response });
+            const catalog = await CatalogService.getCatalogWithPublicItems(id);
+            return catalog;
         } catch (err) {
             console.log(err);
         }
     }
 
-
-    deleteCatalog = async (id) => {
+    deleteItem = async (id) => {
         let confirmDelete = window.confirm('Do you want to permanently delete this record?');
         if (confirmDelete) {
             try {
-                await CatalogService.delete(id);
-                this.deleteCatalogFromState(id);
+                await ItemService.delete(id);
+                this.deleteItemFromState(id);
             } catch (err) {
                 console.log(err);
             }
         }
     }
 
-    deleteCatalogFromState = (id) => {
-        const updatedList = this.state.catalogs.filter(data => data._id !== id);
-        this.setState({ catalogs: updatedList, catalogsToShow: updatedList });
+    deleteItemFromState = (id) => {
+        const updatedList = this.state.catalog.items.filter(data => data._id !== id);
+        let newCatalog = this.state.catalog;
+        newCatalog.items = updatedList;
+        this.setState({ catalog: newCatalog, itemsToShow: updatedList });
     }
 
     submitSearch = async (e) => {
@@ -49,15 +56,15 @@ export default class CatalogList extends Component {
 
         let searchFilters = [];
         if (this.state.searchFilter === '') {
-            searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items" && key !== "user");
+            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v");
         } else {
             searchFilters.push(this.state.searchFilter);
         }
 
         let results = [];
-        if (this.state.catalogs) {
-            for (var i = 0; i < this.state.catalogs.length; i++) {
-                let catalog = this.state.catalogs[i];
+        if (this.state.catalog && this.state.catalog.items) {
+            for (var i = 0; i < this.state.catalog.items.length; i++) {
+                let catalog = this.state.catalog.items[i];
                 for (var j = 0; j < searchFilters.length; j++) {
                     let filter = searchFilters[j];
                     if (catalog[filter].toString().toLowerCase().indexOf(this.state.query.toLowerCase()) > -1) {
@@ -67,7 +74,8 @@ export default class CatalogList extends Component {
                 }
             }
         }
-        this.setState({ catalogsToShow: results });
+    
+        this.setState({ itemsToShow: results });
     }
 
     onChange = e => {
@@ -81,38 +89,24 @@ export default class CatalogList extends Component {
             this.setState({ searchFilter: e.target.innerHTML });
         }
     }
-    
 
     render() {
-        
-        const catalogs = this.state.catalogsToShow && this.state.catalogsToShow.map(catalog => {
+        const items = this.state.itemsToShow && this.state.itemsToShow.map(item => {
             return (
-                <tr key={ catalog._id }>
+                <tr key={ item._id }>
                     <td>
-                        <Link to={{pathname: `/catalogs/${catalog._id}`}}>
-                            {catalog.name}
+                        <Link to={{pathname: `/items/${item._id}`, item: item }}>
+                            {item.name}
                         </Link> 
-                    </td>
-                    
-                    <td>
-                        <Row className="float-right">
-
-                            <Link to={{pathname: "/catalogs/update", catalog: catalog}} >
-                                <Button variant="outline-success" size="sm">Update</Button>
-                            </Link>
-
-                            <Button className="ml-2" size="sm" variant="outline-danger" onClick={() => this.deleteCatalog(catalog._id)}>Delete</Button>
-                        </Row>
                     </td>
                 </tr>
             )
         })
 
-        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items" && key !== "user");
-        
-        return (
+        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v");
 
-            <Row>                  
+        return (
+            <Row>
                 {/* Search */}
                 <Col sm={12}>
                     <Form onSubmit={ this.submitSearch }>
@@ -128,7 +122,7 @@ export default class CatalogList extends Component {
                             </DropdownButton>
 
                             {/* Input area */}
-                            <FormControl autocomplete="off" name="query" onChange={ this.onChange } placeholder="Search for catalogs"/>
+                            <FormControl autocomplete="off" name="query" onChange={ this.onChange } placeholder="Search for items"/>
 
                             {/* Search button */}
                             <InputGroup.Append>
@@ -138,15 +132,30 @@ export default class CatalogList extends Component {
                     </Form>
                 </Col>
 
-                {/* Catalog List */}
+                {/* Catalog */}
+                <Col sm={12}>
+                    <Card border="dark" sm={12}>
+                        <Card.Header>{this.state.catalog && this.state.catalog.name }</Card.Header>
+                        <Card.Body>
+                            <Card.Text>
+                            {this.state.catalog && this.state.catalog.description}
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <br />
+                </Col>
+                
+                
+                {/* Item List */}
                 <Col>
                     <Table>
                         <tbody>
-                            { catalogs }
+                            { items }
                         </tbody>
                     </Table>
                 </Col>
             </Row>
         )
+
     }
 }

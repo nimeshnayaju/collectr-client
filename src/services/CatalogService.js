@@ -1,28 +1,48 @@
 import http from "../http-common";
+import authHeader from "../helpers/auth-header";
 
 class CatalogService {
 
     getAll = async () => {
         try {
-            const response = await http.get("/catalogs");
+            const response = await http.get("/catalogs", { headers: authHeader() });
             return response.data;
         } catch (err) {
             console.log(err);
         }
     }
 
+    getAllPublic = async () => {
+        try {
+            const response = await http.get("/catalogs/public", { headers: authHeader() });
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    getCatalogWithPublicItems = async (id) => {
+        try {
+            const response = await http.get(`/catalogs/public/${id}`, { headers: authHeader() });
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
     get = async (id) => {
-         try {
-             const response = await http.get(`/catalogs/${id}`);
-             return response.data;
-         } catch (err) {
-             console.log(err);
-         }
+        try {
+            const response = await http.get(`/catalogs/${id}`, { headers: authHeader() });
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     update = async (id, data) => {
         try {
-            const response = await http.put(`/catalogs/${id}`, data);
+            const response = await http.put(`/catalogs/${id}`, data, { headers: authHeader() });
             return response.data;
         } catch (err) {
             console.log(err);
@@ -31,7 +51,7 @@ class CatalogService {
 
     add = async (data) => {
         try {
-            const response = await http.post("/catalogs", data);
+            const response = await http.post("/catalogs", data, { headers: authHeader() });
             return response.data;
         } catch (err) {
             console.log(err);
@@ -40,18 +60,7 @@ class CatalogService {
 
     delete = async (id) => {
         try {
-            const response = await http.delete(`/catalogs/${id}`);
-            return response.data;
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    search = async (name) => {
-        try {
-            console.log(name);
-            const response = await http.post(`/catalogs/search/?name=${name}`);
-            console.log(response);
+            const response = await http.delete(`/catalogs/${id}`, { headers: authHeader() });
             return response.data;
         } catch (err) {
             console.log(err);

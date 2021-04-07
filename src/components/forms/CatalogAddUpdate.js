@@ -9,11 +9,18 @@ export default class CatalogAddUpdate extends Component {
         id: null,
         name: "",
         description: "",
+        isPrivate: true,
         submitted: false
     }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+    }
+
+    onChangeSelect = e => {
+        const selectedIndex = e.target.options.selectedIndex;
+        const isPrivate = e.target.options[selectedIndex].getAttribute('data-id') === "true" ? true : false;
+        this.setState({ isPrivate: isPrivate });
     }
 
     submitForm = async(e) => {
@@ -24,16 +31,18 @@ export default class CatalogAddUpdate extends Component {
         } else {
             catalog = await this.submitAdd();
         }
-        await this.setState({ id: catalog._id, submitted: true });
+        if (catalog) {
+            await this.setState({ id: catalog._id, submitted: true });
+        }
     }
 
     submitAdd = async() => {
-        let data = { name: this.state.name, description: this.state.description };
+        let data = { name: this.state.name, description: this.state.description, isPrivate: this.state.isPrivate };
         return await this.addCatalog(data);
     }
 
     submitUpdate = async() => {
-        let data = { name: this.state.name, description: this.state.description };
+        let data = { name: this.state.name, description: this.state.description, isPrivate: this.state.isPrivate };
         return await this.updateCatalog(this.state.id, data);
     }
 
@@ -55,9 +64,10 @@ export default class CatalogAddUpdate extends Component {
 
     componentDidMount = async() => {
         // If Catalog exists, populate the state with the Catalog object received from props
+        console.log(this.props.location.catalog);
         if (this.props.location.catalog) {
-            const { _id, name, description } = this.props.location.catalog;
-            this.setState({ id: _id, name, description });
+            const { _id, name, description, isPrivate } = this.props.location.catalog;
+            await this.setState({ id: _id, name, description, isPrivate });
         }
     }
 
@@ -79,6 +89,16 @@ export default class CatalogAddUpdate extends Component {
                     <FormLabel column sm="2">Description</FormLabel>
                     <Col sm="10">
                         <FormControl type="text" name="description" onChange={ this.onChange } value={this.state.description} />
+                    </Col>
+                </FormGroup>
+
+                <FormGroup as={Row}>
+                <FormLabel column sm="2">Private</FormLabel>
+                    <Col sm="10">
+                        <FormControl onChange={ this.onChangeSelect } value={ this.state.isPrivate } as="select">
+                            <option data-id="true">true</option>
+                            <option data-id="false">false</option>
+                        </FormControl>
                     </Col>
                 </FormGroup>
 
