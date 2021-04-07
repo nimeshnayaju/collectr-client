@@ -11,6 +11,7 @@ export default class ItemAddUpdate extends Component {
         name: "",
         manufacturer: "",
         catalogName: null,
+        isPrivate: true,
         catalogId: null,
         catalogs: [],
         submitted: false
@@ -18,6 +19,12 @@ export default class ItemAddUpdate extends Component {
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+    }
+
+    onChangeSelect = e => {
+        const selectedIndex = e.target.options.selectedIndex;
+        const isPrivate = e.target.options[selectedIndex].getAttribute('data-id') === "true" ? true : false;
+        this.setState({ isPrivate: isPrivate });
     }
 
     onChangeCatalog = async(e) => {
@@ -40,12 +47,12 @@ export default class ItemAddUpdate extends Component {
     }
 
     submitAdd = async(e) => {
-        let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId };
+        let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId, isPrivate: this.state.isPrivate };
         return await this.addItem(data);
     }
 
     submitUpdate = async(e) => {
-        let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId };
+        let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId, isPrivate: this.state.isPrivate };
         return await this.updateItem(this.state.id, data);
     }
 
@@ -78,11 +85,11 @@ export default class ItemAddUpdate extends Component {
         await this.getCatalogs();
         // If Item exists, populate the state with the Item object received from props
         if (this.props.location.item) {
-            const { _id, name, manufacturer } = this.props.location.item;
+            const { _id, name, manufacturer, isPrivate } = this.props.location.item;
             // const { catalogId } = this.props;
             // const catalogName = this.state.catalogs.find(data => data._id === catalogId)?.name;
 
-            await this.setState({ id: _id, name, manufacturer });
+            await this.setState({ id: _id, name, manufacturer, isPrivate });
         }
     }
 
@@ -119,6 +126,16 @@ export default class ItemAddUpdate extends Component {
                         </FormControl>
                     </Col>
                 </FormGroup> : null }
+
+                <FormGroup as={Row}>
+                <FormLabel column sm="2">Private</FormLabel>
+                    <Col sm="10">
+                        <FormControl onChange={ this.onChangeSelect } value={ this.state.isPrivate } as="select">
+                            <option data-id="true">true</option>
+                            <option data-id="false">false</option>
+                        </FormControl>
+                    </Col>
+                </FormGroup>
                 
                 <Button type="submit">Submit</Button>
 

@@ -77,7 +77,7 @@ class App extends Component {
                                     <Link to="/">Home</Link>
                                 </li>
                                 <li>
-                                    <Link to="/catalogs">All user catalogs</Link>
+                                    <Link to="/catalogs">User's catalogs</Link>
                                 </li>
                                 <li>
                                     <Link to={{pathname: "/catalogs/public", public: true }}>All public catalogs</Link>

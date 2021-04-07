@@ -17,7 +17,7 @@ export default class CatalogAddUpdate extends Component {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    onChangeRadio = e => {
+    onChangeSelect = e => {
         const selectedIndex = e.target.options.selectedIndex;
         const isPrivate = e.target.options[selectedIndex].getAttribute('data-id') === "true" ? true : false;
         this.setState({ isPrivate: isPrivate });
@@ -64,9 +64,10 @@ export default class CatalogAddUpdate extends Component {
 
     componentDidMount = async() => {
         // If Catalog exists, populate the state with the Catalog object received from props
+        console.log(this.props.location.catalog);
         if (this.props.location.catalog) {
-            const { _id, name, description } = this.props.location.catalog;
-            this.setState({ id: _id, name, description });
+            const { _id, name, description, isPrivate } = this.props.location.catalog;
+            await this.setState({ id: _id, name, description, isPrivate });
         }
     }
 
@@ -94,9 +95,9 @@ export default class CatalogAddUpdate extends Component {
                 <FormGroup as={Row}>
                 <FormLabel column sm="2">Private</FormLabel>
                     <Col sm="10">
-                        <FormControl onChange={ this.onChangeRadio } as="select">
-                            <option data-id="true">True</option>
-                            <option data-id="false">False</option>
+                        <FormControl onChange={ this.onChangeSelect } value={ this.state.isPrivate } as="select">
+                            <option data-id="true">true</option>
+                            <option data-id="false">false</option>
                         </FormControl>
                     </Col>
                 </FormGroup>
