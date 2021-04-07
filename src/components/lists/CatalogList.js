@@ -46,10 +46,27 @@ export default class CatalogList extends Component {
 
     submitSearch = async (e) => {
         e.preventDefault();
-        // default search filter = "name"
-        let filter = "name";
-        filter = this.state.searchFilter !== '' ? this.state.searchFilter.toLowerCase() : filter;
-        const results = this.state.catalogs && this.state.catalogs.filter((catalog) => catalog[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
+
+        let searchFilters = [];
+        if (this.state.searchFilter === '') {
+            searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items" && key !== "user");
+        } else {
+            searchFilters.push(this.state.searchFilter);
+        }
+
+        let results = [];
+        if (this.state.catalogs) {
+            for (var i = 0; i < this.state.catalogs.length; i++) {
+                let catalog = this.state.catalogs[i];
+                for (var j = 0; j < searchFilters.length; j++) {
+                    let filter = searchFilters[j];
+                    if (catalog[filter].toString().toLowerCase().indexOf(this.state.query.toLowerCase()) > -1) {
+                        results.push(catalog);
+                        break;
+                    }
+                }
+            }
+        }
         this.setState({ catalogsToShow: results });
     }
 
@@ -58,10 +75,10 @@ export default class CatalogList extends Component {
     }
     
     onSelectDropdown = e => {
-        if (e.target.innerText.toLowerCase() === 'clear filter') {
+        if (e.target.innerHTML.trim().toLowerCase() === 'clear filter') {
             this.setState({ searchFilter: '' });
         } else {
-            this.setState({ searchFilter: e.target.innerText });
+            this.setState({ searchFilter: e.target.innerHTML });
         }
     }
     
@@ -91,7 +108,7 @@ export default class CatalogList extends Component {
             )
         })
 
-        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items" && key !== "user" && key !== "isPrivate");
+        const searchFilters = this.state.catalogs && this.state.catalogs[0] && Object.keys(this.state.catalogs[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items" && key !== "user");
         
         return (
 

@@ -51,11 +51,28 @@ export default class CatalogList extends Component {
 
     submitSearch = async (e) => {
         e.preventDefault();
-        // default search filter = "name"
-        let filter = "name";
-        filter = this.state.searchFilter !== '' ? this.state.searchFilter.toLowerCase() : filter;
-        const results =  this.state.catalog && this.state.catalog.items && this.state.catalog.items.filter((item) => item[filter].toLowerCase().indexOf(this.state.query.toLowerCase()) > -1);
 
+        let searchFilters = [];
+        if (this.state.searchFilter === '') {
+            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v");
+        } else {
+            searchFilters.push(this.state.searchFilter);
+        }
+
+        let results = [];
+        if (this.state.catalog && this.state.catalog.items) {
+            for (var i = 0; i < this.state.catalog.items.length; i++) {
+                let catalog = this.state.catalog.items[i];
+                for (var j = 0; j < searchFilters.length; j++) {
+                    let filter = searchFilters[j];
+                    if (catalog[filter].toString().toLowerCase().indexOf(this.state.query.toLowerCase()) > -1) {
+                        results.push(catalog);
+                        break;
+                    }
+                }
+            }
+        }
+    
         this.setState({ itemsToShow: results });
     }
 
@@ -64,10 +81,10 @@ export default class CatalogList extends Component {
     }
     
     onSelectDropdown = e => {
-        if (e.target.innerText.toLowerCase() === 'clear filter') {
+        if (e.target.innerHTML.trim().toLowerCase() === 'clear filter') {
             this.setState({ searchFilter: '' });
         } else {
-            this.setState({ searchFilter: e.target.innerText });
+            this.setState({ searchFilter: e.target.innerHTML });
         }
     }
 
@@ -94,7 +111,7 @@ export default class CatalogList extends Component {
             )
         })
 
-        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "items");
+        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v");
 
         return (
             <Row>
