@@ -3,57 +3,50 @@ import { Redirect } from 'react-router';
 import { Button, Form, FormGroup, FormLabel, FormControl, Row, Col } from 'react-bootstrap';
 
 import ItemService from "../../services/ItemService";
-import CatalogService from "../../services/CatalogService";
 
 export default class ItemAddUpdate extends Component {
     state = {
-        id: null,
-        name: "",
-        manufacturer: "",
-        catalogName: null,
-        isPrivate: true,
         catalogId: null,
-        catalogs: [],
+        item: {},
+        itemFields: [],
         submitted: false
     }
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        let item = this.state.item;
+        item[e.target.name] = e.target.value;
+        this.setState({ item: item });
     }
 
     onChangeSelect = e => {
         const selectedIndex = e.target.options.selectedIndex;
         const isPrivate = e.target.options[selectedIndex].getAttribute('data-id') === "true" ? true : false;
-        this.setState({ isPrivate: isPrivate });
+        let item = this.state.item;
+        item[isPrivate] = isPrivate;
+        this.setState({ item: item });
     }
 
-    onChangeCatalog = async(e) => {
-        const selectedIndex = e.target.options.selectedIndex;
-        this.setState({
-            catalogId: e.target.options[selectedIndex].getAttribute('data-id'),
-            catalogName: e.target.value
-        });
-    }
 
     submitForm = async(e) => {
         e.preventDefault();
-        let item;
-        if (this.props.location.item) {
-            item = await this.submitUpdate()
+        let item = this.state.item;
+        if (this.props.match.params.itemId) {
+            item = await this.submitUpdate(item);
         } else {
-            item = await this.submitAdd();
+            item["catalog"] = this.state.catalogId;
+            item = await this.submitAdd(item);
         }
-        await this.setState({ id: item._id, submitted: true });
+        if (item) {
+            await this.setState({ item: item, submitted: true });
+        }
     }
 
-    submitAdd = async(e) => {
-        let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId, isPrivate: this.state.isPrivate };
-        return await this.addItem(data);
+    submitAdd = async(item) => {
+        return await this.addItem(item);
     }
 
-    submitUpdate = async(e) => {
-        let data = { name: this.state.name, manufacturer: this.state.manufacturer, catalog: this.state.catalogId, isPrivate: this.state.isPrivate };
-        return await this.updateItem(this.state.id, data);
+    submitUpdate = async(item) => {
+        return await this.updateItem(item._id, item);
     }
 
     addItem = async(data) => {
@@ -72,30 +65,38 @@ export default class ItemAddUpdate extends Component {
         }
     }
 
-    getCatalogs = async () => {
+    getItem = async (id) => {
         try {
-            const response = await CatalogService.getAll();
-            this.setState({ catalogs: response });
+            const item = await ItemService.get(id);
+            return item;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    getItemFields = async (id) => {
+        try {
+            const fields = await ItemService.getItemFields(id);
+            return fields.itemFields;
         } catch (err) {
             console.log(err);
         }
     }
 
     componentDidMount = async() => {
-        await this.getCatalogs();
-        // If Item exists, populate the state with the Item object received from props
-        if (this.props.location.item) {
-            const { _id, name, manufacturer, isPrivate } = this.props.location.item;
-            // const { catalogId } = this.props;
-            // const catalogName = this.state.catalogs.find(data => data._id === catalogId)?.name;
-
-            await this.setState({ id: _id, name, manufacturer, isPrivate });
+        if (this.props.match.params.catalogId) {
+            const itemFields = await this.getItemFields(this.props.match.params.catalogId);
+            await this.setState({ catalogId: this.props.match.params.catalogId, itemFields });
+        }
+        if (this.props.match.params.itemId) {
+            const item = await this.getItem(this.props.match.params.itemId);
+            await this.setState({ item });
         }
     }
 
     render() {
         if (this.state.submitted) {
-            return <Redirect to={{ pathname: `/items/${this.state.id}`}} />
+            return <Redirect to={{ pathname: `/items/${this.state.item._id}`}} />
         }
         return (
             <Form autocomplete="off" onSubmit={ this.submitForm }>
@@ -103,29 +104,16 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Name</FormLabel>
                     <Col sm="10">
-                        <FormControl type="text" name="name" onChange={ this.onChange } value={this.state.name} />
+                        <FormControl type="text" name="name" onChange={ this.onChange } value={this.state.item.name } />
                     </Col>
                 </FormGroup>
 
                 <FormGroup as={Row}>
-                    <FormLabel column sm="2">Manufacturer</FormLabel>
+                    <FormLabel column sm="2">Description</FormLabel>
                     <Col sm="10">
-                        <FormControl type="text" name="manufacturer" onChange={ this.onChange } value={this.state.manufacturer} />
+                        <FormControl type="text" name="description" onChange={ this.onChange } value={this.state.item.description } />
                     </Col>
                 </FormGroup>
-
-                { !this.props.location.item ? 
-                <FormGroup as={Row}>
-                    <FormLabel column sm="2">Catalog</FormLabel>
-                    <Col sm="10">
-                        <FormControl onChange={ this.onChangeCatalog } value={ this.state.catalogName } as="select">
-                            <option selected>Select a catalog</option>
-                            { this.state.catalogs && this.state.catalogs.map((catalog) => {
-                            return <option data-id={ catalog._id }>{ catalog.name }</option> 
-                            }) }
-                        </FormControl>
-                    </Col>
-                </FormGroup> : null }
 
                 <FormGroup as={Row}>
                 <FormLabel column sm="2">Private</FormLabel>
@@ -136,6 +124,15 @@ export default class ItemAddUpdate extends Component {
                         </FormControl>
                     </Col>
                 </FormGroup>
+
+                { this.state.itemFields && this.state.itemFields.map((field) => {
+                    return <FormGroup as={Row}>
+                        <FormLabel column sm="2">{ field }</FormLabel>
+                        <Col sm="10">
+                            <FormControl type="text" name={field} onChange={ this.onChange } value={this.state.item[field]} />
+                        </Col>
+                    </FormGroup>
+                }) }
                 
                 <Button type="submit">Submit</Button>
 

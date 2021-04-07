@@ -56,7 +56,7 @@ export default class CatalogList extends Component {
 
         let searchFilters = [];
         if (this.state.searchFilter === '') {
-            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v");
+            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog");
         } else {
             searchFilters.push(this.state.searchFilter);
         }
@@ -102,7 +102,7 @@ export default class CatalogList extends Component {
                     <td>
                         <Row className="float-right">
 
-                            <Link to={{pathname: "/items/update", item: item}} >
+                            <Link to={{pathname: `/items/update/${this.state.catalog._id}/${item._id}` }} >
                                 <Button variant="outline-success" size="sm">Update</Button>
                             </Link>
 
@@ -113,9 +113,10 @@ export default class CatalogList extends Component {
             )
         })
 
-        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v");
-
+        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog");
+        const { catalog } = this.state;
         return (
+
             <Row>
                 {/* Search */}
                 <Col sm={12}>
@@ -143,18 +144,30 @@ export default class CatalogList extends Component {
                 </Col>
 
                 {/* Catalog */}
-                <Col sm={12}>
-                    <Card border="dark" sm={12}>
-                        <Card.Header>{this.state.catalog && this.state.catalog.name }</Card.Header>
+                {catalog && <Col sm={12}>
+                    <Card sm={12}>
                         <Card.Body>
+                            <Card.Title>{catalog.name }</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted"> { catalog.description }</Card.Subtitle>
                             <Card.Text>
-                            {this.state.catalog && this.state.catalog.description}
+                                <b>Status</b>: { catalog.isPrivate ? "Private" : "Public" }
                             </Card.Text>
+                            
+                            <Card.Text className="mt-3">
+                                <Link className="mr-2" to={{pathname: `/items/add/${this.state.catalog._id}` }} >
+                                    <Button variant="outline-primary" size="sm">Add New Item</Button>
+                                </Link>
+                                
+                                <Link to={{pathname: "/catalogs/update", catalog: this.state.catalog}} >
+                                    <Button variant="outline-success" size="sm">Update Catalog</Button>
+                                </Link>
+                            </Card.Text>
+                            
                         </Card.Body>
                     </Card>
                     <br />
-                </Col>
-                
+                </Col>}
+
                 
                 {/* Item List */}
                 <Col>
