@@ -56,7 +56,7 @@ export default class PublicItemList extends Component {
 
         let searchFilters = [];
         if (this.state.searchFilter === '') {
-            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v");
+            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog");
         } else {
             searchFilters.push(this.state.searchFilter);
         }
@@ -103,7 +103,7 @@ export default class PublicItemList extends Component {
             )
         })
 
-        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v");
+        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog");
 
         return (
             <Row>

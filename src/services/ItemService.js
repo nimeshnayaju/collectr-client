@@ -21,6 +21,15 @@ class ItemService {
         }
     }
 
+    getItemFields = async (id) => {
+        try {
+            const response = await http.get(`/items/fields/${id}`, {headers: authHeader() });
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     update = async (id, data) => {
         try {
             const response = await http.put(`/items/${id}`, data, { headers: authHeader() });
@@ -33,6 +42,7 @@ class ItemService {
     add = async (data) => {
         try {
             const response = await http.post("/items", data, { headers: authHeader() });
+            console.log(response.data);
             return response.data;
         } catch (err) {
             console.log(err);

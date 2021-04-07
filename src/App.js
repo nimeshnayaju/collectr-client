@@ -89,9 +89,6 @@ class App extends Component {
                                     <Link to="/catalogs/add">Add catalog</Link>
                                 </li>
                                 <li>
-                                    <Link to="/items/add">Add item</Link>
-                                </li>
-                                <li>
                                     <a href="/login" onClick={this.logout}>Log out</a>
                                 </li>
                             </ul>
@@ -106,7 +103,7 @@ class App extends Component {
                                 <Route exact path={["/catalogs/update", "/catalogs/add"]} component={ CatalogAddUpdate } />
                                 <Route exact path="/catalogs/:id" component={ ItemList } />
                                 <Route exact path="/catalogs/:id/public/items" component={ PublicItemList } />
-                                <Route exact path={["/items/update", "/items/add"]} component={ ItemAddUpdate } />
+                                <Route exact path={["/items/add/:catalogId", "/items/update/:catalogId/:itemId"]} component={ ItemAddUpdate } />
                                 <Route exact path="/items/:id" component={ ItemDetail } />
                             </Switch>
                         </Col>

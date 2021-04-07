@@ -10,6 +10,7 @@ export default class CatalogAddUpdate extends Component {
         name: "",
         description: "",
         isPrivate: true,
+        itemFields: "",
         submitted: false
     }
 
@@ -25,24 +26,24 @@ export default class CatalogAddUpdate extends Component {
 
     submitForm = async(e) => {
         e.preventDefault();
+        let itemFields = this.state.itemFields.split(",");
+        let data = { name: this.state.name, description: this.state.description, isPrivate: this.state.isPrivate, itemFields: itemFields };
         let catalog;
         if (this.props.location.catalog) {
-            catalog = await this.submitUpdate()
+            catalog = await this.submitUpdate(data);
         } else {
-            catalog = await this.submitAdd();
+            catalog = await this.submitAdd(data);
         }
         if (catalog) {
             await this.setState({ id: catalog._id, submitted: true });
         }
     }
 
-    submitAdd = async() => {
-        let data = { name: this.state.name, description: this.state.description, isPrivate: this.state.isPrivate };
+    submitAdd = async(data) => {
         return await this.addCatalog(data);
     }
 
-    submitUpdate = async() => {
-        let data = { name: this.state.name, description: this.state.description, isPrivate: this.state.isPrivate };
+    submitUpdate = async(data) => {
         return await this.updateCatalog(this.state.id, data);
     }
 
@@ -64,10 +65,9 @@ export default class CatalogAddUpdate extends Component {
 
     componentDidMount = async() => {
         // If Catalog exists, populate the state with the Catalog object received from props
-        console.log(this.props.location.catalog);
         if (this.props.location.catalog) {
-            const { _id, name, description, isPrivate } = this.props.location.catalog;
-            await this.setState({ id: _id, name, description, isPrivate });
+            const { _id, name, description, isPrivate, itemFields } = this.props.location.catalog;
+            await this.setState({ id: _id, name, description, isPrivate, itemFields });
         }
     }
 
@@ -75,6 +75,7 @@ export default class CatalogAddUpdate extends Component {
         if (this.state.submitted) {
             return <Redirect to={{ pathname: `/catalogs/${this.state.id}`}} />
         }
+
         return (
             <Form autocomplete="off" onSubmit={ this.submitForm }>
 
@@ -100,6 +101,17 @@ export default class CatalogAddUpdate extends Component {
                             <option data-id="false">false</option>
                         </FormControl>
                     </Col>
+                </FormGroup>
+
+                <FormGroup as={Row}>
+                    <FormLabel column sm="2">Item fields</FormLabel>
+                    <Col sm="10">
+                        <FormControl placeholder="Use comma to separate the fields" type="text" name="itemFields" onChange={ this.onChange } value={ this.state.itemFields } />
+                        <Form.Text muted>
+                            All catalog items have the basic fields: name, description, isPrivate. The above entered fields will be inherited by all items inside of this catalog.
+                        </Form.Text>
+                    </Col>
+                    
                 </FormGroup>
 
                 <Button type="submit">Submit</Button>
