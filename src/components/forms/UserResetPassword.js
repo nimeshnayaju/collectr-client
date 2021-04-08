@@ -5,9 +5,9 @@ import {Row, Col, Button,Form, FormGroup, FormControl, FormLabel} from 'react-bo
 import "../../App.css";
 import AuthService from "../../services/AuthService";
 
-export default class UserForgotPassword extends Component {
+class UserResetPassword extends Component {
     state = {
-        email: "",
+        password: "",
         submitted: false
     }
 
@@ -18,8 +18,8 @@ export default class UserForgotPassword extends Component {
     handleForgotPassword = async (e) => {
         e.preventDefault();
         try {
-            let data = { email: this.state.email };
-            const response = await AuthService.forgotPassword(data);
+            let data = { email: this.state.password };
+            const response = await AuthService.resetPassword(data);
             if (response) {
                 this.setState({ submitted: true });
             }
@@ -32,17 +32,17 @@ export default class UserForgotPassword extends Component {
     render() {
         if (this.state.submitted) {
             return (
-                <h2>Submission successful, your link should arrive shortly.</h2>
-            )
+                <h2>Submission successful, you may now log in with your new password.</h2>
+            );
         }
         return (
 
             <Form autocomplete="off" onSubmit={ this.handleForgotPassword }>
-                <h2>Forgot your password? Enter your email below and you should receive a link to reset your password.</h2>
+                <h2>Please enter a new password below.</h2>
                 <FormGroup as={Row}>
-                    <FormLabel column sm="2">Email</FormLabel>
+                    <FormLabel column sm="2">Password</FormLabel>
                     <Col sm="10">
-                        <FormControl type="email" name="email" onChange={ this.onChange } value={this.state.email} />
+                        <FormControl type="password" name="password" onChange={ this.onChange } value={this.state.password} />
                     </Col>
                 </FormGroup>
 

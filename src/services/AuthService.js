@@ -24,16 +24,14 @@ class UserService {
         }
     }
 
-    logout = async (data) => {
+    logout = async () => {
         localStorage.removeItem('AUTH_TOKEN');
     }
 
     isLoggedIn = () => {
         const token = JSON.parse(localStorage.getItem('AUTH_TOKEN'));
-        if (token) {
-            return true;
-        }
-        return false;
+        return !!token; // return true if token found, false otherwise
+
     }
 
     forgotPassword = async (data) => {
