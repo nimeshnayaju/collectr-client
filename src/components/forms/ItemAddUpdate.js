@@ -22,7 +22,7 @@ export default class ItemAddUpdate extends Component {
         const selectedIndex = e.target.options.selectedIndex;
         const isPrivate = e.target.options[selectedIndex].getAttribute('data-id') === "true" ? true : false;
         let item = this.state.item;
-        item[isPrivate] = isPrivate;
+        item["isPrivate"] = isPrivate;
         this.setState({ item: item });
     }
 
@@ -86,7 +86,8 @@ export default class ItemAddUpdate extends Component {
     componentDidMount = async() => {
         if (this.props.match.params.catalogId) {
             const itemFields = await this.getItemFields(this.props.match.params.catalogId);
-            await this.setState({ catalogId: this.props.match.params.catalogId, itemFields });
+            const item = {isPrivate: true};
+            await this.setState({ catalogId: this.props.match.params.catalogId, itemFields, item });
         }
         if (this.props.match.params.itemId) {
             const item = await this.getItem(this.props.match.params.itemId);
@@ -104,7 +105,7 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Name</FormLabel>
                     <Col sm="10">
-                        <FormControl type="text" name="name" onChange={ this.onChange } value={this.state.item.name } />
+                        <FormControl required type="text" name="name" onChange={ this.onChange } value={this.state.item.name } />
                     </Col>
                 </FormGroup>
 
@@ -139,7 +140,7 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                 <FormLabel column sm="2">Private</FormLabel>
                     <Col sm="10">
-                        <FormControl onChange={ this.onChangeSelect } value={ this.state.isPrivate } as="select">
+                        <FormControl onChange={ this.onChangeSelect } value={ this.state.item.isPrivate } as="select">
                             <option data-id="true">true</option>
                             <option data-id="false">false</option>
                         </FormControl>
