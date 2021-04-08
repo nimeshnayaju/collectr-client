@@ -12,6 +12,7 @@ import PublicItemList from './components/lists/PublicItemList';
 import CatalogAddUpdate from './components/forms/CatalogAddUpdate';
 import ItemAddUpdate from './components/forms/ItemAddUpdate';
 import ItemDetail from './components/details/ItemDetail';
+import PublicItemDetail from './components/details/PublicItemDetail';
 import UserLogin from './components/forms/UserLogin';
 import UserSignup from "./components/forms/UserSignup";
 import AuthService from "./services/AuthService";
@@ -104,7 +105,8 @@ class App extends Component {
                                 <Route exact path="/catalogs/:id" component={ ItemList } />
                                 <Route exact path="/catalogs/:id/public/items" component={ PublicItemList } />
                                 <Route exact path={["/items/add/:catalogId", "/items/update/:catalogId/:itemId"]} component={ ItemAddUpdate } />
-                                <Route exact path="/items/:id" component={ ItemDetail } />
+                                <Route exact path="/items/:catalogId/:itemId" component={ ItemDetail } />
+                                <Route exact path="/items/public/:catalogId/:itemId" component={ PublicItemDetail } />
                             </Switch>
                         </Col>
                     </Row>

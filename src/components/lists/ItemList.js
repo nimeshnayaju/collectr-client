@@ -56,7 +56,7 @@ export default class CatalogList extends Component {
 
         let searchFilters = [];
         if (this.state.searchFilter === '') {
-            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog");
+            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog" && key !== "user");
         } else {
             searchFilters.push(this.state.searchFilter);
         }
@@ -95,7 +95,7 @@ export default class CatalogList extends Component {
             return (
                 <tr key={ item._id }>
                     <td>
-                        <Link to={{pathname: `/items/${item._id}`, item: item }}>
+                        <Link to={{pathname: `/items/${this.state.catalog._id}/${item._id}` }}>
                             {item.name}
                         </Link> 
                     </td>
@@ -113,7 +113,7 @@ export default class CatalogList extends Component {
             )
         })
 
-        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog");
+        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog" && key !== "user");
         const { catalog } = this.state;
         return (
 
