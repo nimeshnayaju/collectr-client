@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import {Row, Col, Button,Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import {Row, Col, Modal, Button, Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
 import { Redirect } from 'react-router';
-
 import "../../App.css";
 import AuthService from "../../services/AuthService";
 
@@ -11,7 +9,9 @@ export default class UserSignup extends Component {
         email: "",
         password: "",
         submitted: false,
-        errorMessage:""
+        message:"",
+        loginFail: false,
+        loginSuccess: false
     }
 
     onChange = e => {
@@ -23,23 +23,37 @@ export default class UserSignup extends Component {
         try {
             let data = { email: this.state.email, password: this.state.password };
             const response = await AuthService.login(data);
-            if (response) {
-                this.setState({ submitted: true })
+            if(!response.OK){
+                this.setState({ submitted: true, email: "", password: "", message: response.message , loginFail: true})
+            }else{
+                this.setState({ submitted: true, email: "", password: "", message: response.message, loginSuccess:true })
             }
-            window.location.reload(); 
         } catch (err) {
-            this.setState({ errorMessage: err.message });
             console.log(err);
         }
     }
 
     render() {
-        if (this.state.submitted) {
+        const loginModal = this.state.loginFail ? 
+        <Modal.Dialog>
+                 <Modal.Header>
+                     <Modal.Title>User Login</Modal.Title>
+                 </Modal.Header>
+
+                 <Modal.Body>
+                     {/* <p>Please try again. <Link to="/login">login</Link> link.</p> */}
+                     <p>{ this.state.message }</p>
+                 </Modal.Body>
+                
+             </Modal.Dialog>:null;
+
+        if(this.state.submitted && this.state.loginSuccess ){
             return <Redirect to={{ pathname: "/"}} />
         }
         return (
             <Form autocomplete="off" onSubmit={ this.handleLogin }>
-                { this.state.errorMessage && <p>wrong authentication info. Try again. </p> }
+
+                { loginModal }
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Email</FormLabel>
@@ -56,6 +70,7 @@ export default class UserSignup extends Component {
                 </FormGroup>
 
                 <Button type="submit">Login</Button>
+
             </Form>
         );
     }
