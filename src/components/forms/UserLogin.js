@@ -9,7 +9,8 @@ export default class UserSignup extends Component {
         email: "",
         password: "",
         formSubmitted: false,
-        loginSuccess: false
+        loginSuccess: false,
+        message: ""
     }
 
     onChange = e => {
@@ -25,7 +26,7 @@ export default class UserSignup extends Component {
                 this.setState({ loginSuccess: true });
                 window.location.reload();
             } else {
-                this.setState({ formSubmitted: true, email: "", password: "", message: response.message })
+                this.setState({ formSubmitted: true, email: "", password: "", message: (response.message || response.email || response.password) });
             }
         } catch (err) {
             console.log(err);
@@ -57,14 +58,14 @@ export default class UserSignup extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Email</FormLabel>
                     <Col sm="10">
-                        <FormControl type="email" name="email" onChange={ this.onChange } value={this.state.email} />
+                        <FormControl required type="email" name="email" onChange={ this.onChange } value={this.state.email} />
                     </Col>
                 </FormGroup>
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Password</FormLabel>
                     <Col sm="10">
-                        <FormControl type="password" name="password" onChange={ this.onChange } value={this.state.password} />
+                        <FormControl required type="password" name="password" onChange={ this.onChange } value={this.state.password} />
                     </Col>
                 </FormGroup>
 
