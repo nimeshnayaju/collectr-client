@@ -35,6 +35,24 @@ class UserService {
         }
         return false;
     }
+
+    forgotPassword = async (data) => {
+        try {
+            const response = await http.post("/password/forgot", data);
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    resetPassword = async (data) => {
+        try {
+            const response = await http.post("/password/reset", data);
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
 }
 
 export default new UserService();
