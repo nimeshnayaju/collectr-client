@@ -45,6 +45,7 @@ class ItemService {
             console.log(response.data);
             return response.data;
         } catch (err) {
+            console.log(err.response);
             console.log(err);
         }
     }
