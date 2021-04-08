@@ -50,10 +50,8 @@ class CatalogService {
     }
 
     add = async (data) => {
-        console.log(data);
         try {
             const response = await http.post("/catalogs", data, { headers: authHeader() });
-            console.log(response);
             return response.data;
         } catch (err) {
             console.log(err);

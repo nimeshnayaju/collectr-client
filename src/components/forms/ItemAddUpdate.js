@@ -125,7 +125,7 @@ export default class ItemAddUpdate extends Component {
                     </Col>
                 </FormGroup>
 
-                { this.state.itemFields && this.state.itemFields.map((field) => {
+                { this.state.itemFields.length > 0 && this.state.itemFields.map((field) => {
                     return <FormGroup as={Row}>
                         <FormLabel column sm="2">{ field }</FormLabel>
                         <Col sm="10">
