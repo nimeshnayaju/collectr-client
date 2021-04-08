@@ -77,7 +77,7 @@ export default class ItemAddUpdate extends Component {
     getItemFields = async (id) => {
         try {
             const fields = await ItemService.getItemFields(id);
-            return fields.itemFields;
+            return fields;
         } catch (err) {
             console.log(err);
         }
