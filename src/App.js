@@ -107,6 +107,7 @@ class App extends Component {
                                 <Route exact path={["/items/add/:catalogId", "/items/update/:catalogId/:itemId"]} component={ ItemAddUpdate } />
                                 <Route exact path="/items/:catalogId/:itemId" component={ ItemDetail } />
                                 <Route exact path="/items/public/:catalogId/:itemId" component={ PublicItemDetail } />
+
                             </Switch>
                         </Col>
                     </Row>

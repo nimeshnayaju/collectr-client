@@ -24,7 +24,7 @@ export default class UserSignup extends Component {
         try {
             let data = { firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, password: this.state.password };
             const response = await AuthService.signup(data);
-            this.setState({ submitted: true, firstName: "", lastName: "", email: "", password: "", message: response.message })
+            this.setState({ submitted: true, firstName: "", lastName: "", email: "", password: "", message: (response.message || response.firstName || response.lastname || response.email || response.password) });
         } catch (err) {
             console.log(err);
         }

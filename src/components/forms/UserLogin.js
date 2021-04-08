@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
-import {Row, Col, Button,Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
-import { Redirect } from 'react-router';
-
+import {Row, Col, Modal, Button, Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
 import "../../App.css";
 import AuthService from "../../services/AuthService";
+import { Redirect } from 'react-router';
 
 export default class UserSignup extends Component {
     state = {
         email: "",
         password: "",
-        submitted: false
+        formSubmitted: false,
+        loginSuccess: false,
+        message: ""
     }
 
     onChange = e => {
@@ -21,33 +22,50 @@ export default class UserSignup extends Component {
         try {
             let data = { email: this.state.email, password: this.state.password };
             const response = await AuthService.login(data);
-            if (response) {
-                this.setState({ submitted: true })
+            if (response.auth) {
+                this.setState({ loginSuccess: true });
+                window.location.reload();
+            } else {
+                this.setState({ formSubmitted: true, email: "", password: "", message: (response.message || response.email || response.password) });
             }
-            window.location.reload(); 
         } catch (err) {
             console.log(err);
         }
     }
 
     render() {
-        if (this.state.submitted) {
+        if (this.state.loginSuccess) {
             return <Redirect to={{ pathname: "/"}} />
         }
+
+        const loginModal = this.state.formSubmitted ?
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.Title>User Login</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        {/* <p>We've sent you a verification email. After verifying your account, you can log into Collectrs using the <Link to="/login">login</Link> link.</p> */}
+                        <p>{ this.state.message }</p>
+                    </Modal.Body>
+                    
+                </Modal.Dialog> : null;
         return (
             <Form autocomplete="off" onSubmit={ this.handleLogin }>
+
+                { loginModal }
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Email</FormLabel>
                     <Col sm="10">
-                        <FormControl type="email" name="email" onChange={ this.onChange } value={this.state.email} />
+                        <FormControl required type="email" name="email" onChange={ this.onChange } value={this.state.email} />
                     </Col>
                 </FormGroup>
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Password</FormLabel>
                     <Col sm="10">
-                        <FormControl type="password" name="password" onChange={ this.onChange } value={this.state.password} />
+                        <FormControl required type="password" name="password" onChange={ this.onChange } value={this.state.password} />
                     </Col>
                 </FormGroup>
 
