@@ -1,16 +1,14 @@
 import React, {Component} from 'react';
 import {Row, Col, Modal, Button, Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
-import { Redirect } from 'react-router';
 import "../../App.css";
 import AuthService from "../../services/AuthService";
+import { Redirect } from 'react-router';
 
 export default class UserSignup extends Component {
     state = {
         email: "",
         password: "",
-        submitted: false,
-        message:"",
-        loginFail: false,
+        formSubmitted: false,
         loginSuccess: false
     }
 
@@ -23,10 +21,11 @@ export default class UserSignup extends Component {
         try {
             let data = { email: this.state.email, password: this.state.password };
             const response = await AuthService.login(data);
-            if(!response.OK){
-                this.setState({ submitted: true, email: "", password: "", message: response.message , loginFail: true})
-            }else{
-                this.setState({ submitted: true, email: "", password: "", message: response.message, loginSuccess:true })
+            if (response.auth) {
+                this.setState({ loginSuccess: true });
+                window.location.reload();
+            } else {
+                this.setState({ formSubmitted: true, email: "", password: "", message: response.message })
             }
         } catch (err) {
             console.log(err);
@@ -34,22 +33,22 @@ export default class UserSignup extends Component {
     }
 
     render() {
-        const loginModal = this.state.loginFail ? 
-        <Modal.Dialog>
-                 <Modal.Header>
-                     <Modal.Title>User Login</Modal.Title>
-                 </Modal.Header>
-
-                 <Modal.Body>
-                     {/* <p>Please try again. <Link to="/login">login</Link> link.</p> */}
-                     <p>{ this.state.message }</p>
-                 </Modal.Body>
-                
-             </Modal.Dialog>:null;
-
-        if(this.state.submitted && this.state.loginSuccess ){
+        if (this.state.loginSuccess) {
             return <Redirect to={{ pathname: "/"}} />
         }
+
+        const loginModal = this.state.formSubmitted ?
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.Title>User Login</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        {/* <p>We've sent you a verification email. After verifying your account, you can log into Collectrs using the <Link to="/login">login</Link> link.</p> */}
+                        <p>{ this.state.message }</p>
+                    </Modal.Body>
+                    
+                </Modal.Dialog> : null;
         return (
             <Form autocomplete="off" onSubmit={ this.handleLogin }>
 
