@@ -67,7 +67,8 @@ export default class CatalogAddUpdate extends Component {
         // If Catalog exists, populate the state with the Catalog object received from props
         if (this.props.location.catalog) {
             const { _id, name, description, isPrivate, itemFields } = this.props.location.catalog;
-            await this.setState({ id: _id, name, description, isPrivate, itemFields });
+            const fields = itemFields.join(",");
+            await this.setState({ id: _id, name, description, isPrivate, itemFields: fields });
         }
     }
 
@@ -108,7 +109,7 @@ export default class CatalogAddUpdate extends Component {
                     <Col sm="10">
                         <FormControl placeholder="Use comma to separate the fields" type="text" name="itemFields" onChange={ this.onChange } value={ this.state.itemFields } />
                         <Form.Text muted>
-                            All catalog items have the basic fields: name, description, isPrivate. The above entered fields will be inherited by all items inside of this catalog.
+                            All catalog items have the basic fields: <b>name, description, date, isPrivate, provenance, condition</b>. The above entered fields will be inherited by all items inside of this catalog.
                         </Form.Text>
                     </Col>
                     
