@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Col, Button,Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
+import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
 
 import "../../App.css";
@@ -9,7 +10,8 @@ export default class UserSignup extends Component {
     state = {
         email: "",
         password: "",
-        submitted: false
+        submitted: false,
+        errorMessage:""
     }
 
     onChange = e => {
@@ -26,6 +28,7 @@ export default class UserSignup extends Component {
             }
             window.location.reload(); 
         } catch (err) {
+            this.setState({ errorMessage: err.message });
             console.log(err);
         }
     }
@@ -36,6 +39,7 @@ export default class UserSignup extends Component {
         }
         return (
             <Form autocomplete="off" onSubmit={ this.handleLogin }>
+                { this.state.errorMessage && <p>wrong authentication info. Try again. </p> }
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Email</FormLabel>
@@ -52,7 +56,6 @@ export default class UserSignup extends Component {
                 </FormGroup>
 
                 <Button type="submit">Login</Button>
-
             </Form>
         );
     }
