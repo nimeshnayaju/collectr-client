@@ -14,7 +14,7 @@ export default class ItemDetail extends Component {
     componentDidMount = async() => {
         if (this.props.match.params.itemId && this.props.match.params.catalogId) {
             const item = await this.getItem(this.props.match.params.itemId);
-            const fields = (await ItemService.getItemFields(this.props.match.params.catalogId)).itemFields;
+            const fields = await ItemService.getItemFields(this.props.match.params.catalogId);
             this.setState({ item: item, otherFields: fields });
         }
     }
