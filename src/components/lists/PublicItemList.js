@@ -56,7 +56,7 @@ export default class PublicItemList extends Component {
 
         let searchFilters = [];
         if (this.state.searchFilter === '') {
-            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog");
+            searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog" && key !== "user");
         } else {
             searchFilters.push(this.state.searchFilter);
         }
@@ -95,16 +95,16 @@ export default class PublicItemList extends Component {
             return (
                 <tr key={ item._id }>
                     <td>
-                        <Link to={{pathname: `/items/${item._id}`, item: item }}>
+                    <Link to={{pathname: `/items/public/${this.state.catalog._id}/${item._id}` }}>
                             {item.name}
-                        </Link> 
+                    </Link> 
                     </td>
                 </tr>
             )
         })
 
-        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog");
-
+        const searchFilters = this.state.catalog && this.state.catalog.items && this.state.catalog.items[0] && Object.keys(this.state.catalog.items[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "catalog" && key !== "user");
+        const catalog = this.state.catalog;
         return (
             <Row>
                 {/* Search */}
@@ -133,17 +133,18 @@ export default class PublicItemList extends Component {
                 </Col>
 
                 {/* Catalog */}
-                <Col sm={12}>
-                    <Card border="dark" sm={12}>
-                        <Card.Header>{this.state.catalog && this.state.catalog.name }</Card.Header>
+                {catalog && <Col sm={12}>
+                    <Card sm={12}>
                         <Card.Body>
+                            <Card.Title>{catalog.name }</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted"> { catalog.description }</Card.Subtitle>
                             <Card.Text>
-                            {this.state.catalog && this.state.catalog.description}
+                                <b>Status</b>: { catalog.isPrivate ? "Private" : "Public" }
                             </Card.Text>
                         </Card.Body>
                     </Card>
                     <br />
-                </Col>
+                </Col>}
                 
                 
                 {/* Item List */}
