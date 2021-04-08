@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
 import ItemService from '../../services/ItemService';
 
@@ -29,13 +30,13 @@ export default class ItemDetail extends Component {
 
     render() {
         const item = this.state.item;
-        const otherFields = this.state.otherFields.length > 0 && this.state.otherFields.map(field => {
-            return (
-                <Card.Text className="mt-3">
-                    <b>{ field }</b>: { item[field]  }
-                </Card.Text>
-            )
-        })
+        // const otherFields = this.state.otherFields.length > 0 && this.state.otherFields.map(field => {
+        //     return (
+        //         <Card.Text className="mt-3">
+        //             <b>{ field }</b>: { item[field]  }
+        //         </Card.Text>
+        //     )
+        // })
 
         return (
             <Row>
@@ -49,11 +50,21 @@ export default class ItemDetail extends Component {
                                 <b>Status</b>: { item.isPrivate ? "Private" : "Public" }
                             </Card.Text> */}
 
-                        
-                            { otherFields }
+                            <Card.Text className="mt-3">
+                                <p>Date: { item.date }</p>
+                                <p>Condition: { item.condition }</p>
+                                <p>Provenance: { item.provenance }</p>
+                                <p>Description: { item.description }</p>
+                            </Card.Text>
+                            {/* { otherFields } */}
                             
                         </Card.Body>
                     </Card>
+
+                    <br />
+                    <Link to={{pathname: "/catalogs/:id/public/items", item:item}} >
+                        <Button variant="outline-secondary" size="sm">Back</Button>{' '}
+                    </Link>
                 </Col>
                 }
             </Row>
