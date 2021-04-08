@@ -30,13 +30,13 @@ export default class ItemDetail extends Component {
 
     render() {
         const item = this.state.item;
-        // const otherFields = this.state.otherFields.length > 0 && this.state.otherFields.map(field => {
-        //     return (
-        //         <Card.Text className="mt-3">
-        //             <b>{ field }</b>: { item[field]  }
-        //         </Card.Text>
-        //     )
-        // })
+        const otherFields = this.state.otherFields.length > 0 && this.state.otherFields.map(field => {
+            return (
+                <Card.Text className="mt-3">
+                    <b>{ field }</b>: { item[field]  }
+                </Card.Text>
+            )
+        })
 
         return (
             <Row>
@@ -47,7 +47,7 @@ export default class ItemDetail extends Component {
                             <Card.Title>{ item.name }</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
                             {/* <Card.Text>
-                                <b>Status</b>: { item.isPrivate ? "Private" : "Public" }
+                                <b>Status</b>: { this.state.item.isPrivate ? "Private" : "Public" }
                             </Card.Text> */}
 
                             <Card.Text className="mt-3">
@@ -56,7 +56,7 @@ export default class ItemDetail extends Component {
                                 <p>Provenance: { item.provenance }</p>
                                 <p>Description: { item.description }</p>
                             </Card.Text>
-                            {/* { otherFields } */}
+                            { otherFields }
                             
                         </Card.Body>
                     </Card>

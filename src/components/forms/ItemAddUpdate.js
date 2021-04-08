@@ -111,21 +111,21 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Date</FormLabel>
                     <Col sm="10">
-                        <FormControl type="text" name="date" onChange={ this.onChange } value={this.state.date} />
+                        <FormControl type="text" name="date" onChange={ this.onChange } value={this.state.item.date} />
                     </Col>
                 </FormGroup>
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Condition</FormLabel>
                     <Col sm="10">
-                        <FormControl type="text" name="condition" onChange={ this.onChange } value={this.state.condition} />
+                        <FormControl type="text" name="condition" onChange={ this.onChange } value={this.state.item.condition} />
                     </Col>
                 </FormGroup>
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Provenance</FormLabel>
                     <Col sm="10">
-                        <FormControl type="text" name="provenance" onChange={ this.onChange } value={this.state.provenance} />
+                        <FormControl type="text" name="provenance" onChange={ this.onChange } value={this.state.item.provenance} />
                     </Col>
                 </FormGroup>
 
