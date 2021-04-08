@@ -10,6 +10,6 @@
     padding-bottom: .2rem !important;
 }
 
-.dropdown button, .dropdown-item, form label {
+.dropdown button, .dropdown-item, form label, .card-text {
     text-transform: capitalize;
 }

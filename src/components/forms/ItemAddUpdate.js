@@ -96,7 +96,7 @@ export default class ItemAddUpdate extends Component {
 
     render() {
         if (this.state.submitted) {
-            return <Redirect to={{ pathname: `/items/${this.state.item._id}`}} />
+            return <Redirect to={{ pathname: `/items/${this.state.catalogId}/${this.state.item._id}`}} />
         }
         return (
             <Form autocomplete="off" onSubmit={ this.submitForm }>

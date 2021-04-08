@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { Button, Table, Row, Col, Card } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { Row, Col, Card } from 'react-bootstrap';
 
 import ItemService from '../../services/ItemService';
 
 export default class ItemDetail extends Component {
 
     state = {
-        name:'',
-        manufacturer:''
+        item: null,
+        otherFields: []
     }
 
     componentDidMount = async() => {
-        if (this.props.match.params.id) {
-            const item = await this.getItem(this.props.match.params.id);
-            this.setState({ name: item.name , manufacturer: item.manufacturer});
+        if (this.props.match.params.itemId && this.props.match.params.catalogId) {
+            const item = await this.getItem(this.props.match.params.itemId);
+            const fields = (await ItemService.getItemFields(this.props.match.params.catalogId)).itemFields;
+            this.setState({ item: item, otherFields: fields });
         }
     }
 
@@ -28,33 +28,34 @@ export default class ItemDetail extends Component {
     }
 
     render() {
-        const item = this.state;
-        const info = (
-            <Col sm={12}>
-                    <Card border="dark" sm={12}>
-                        <Card.Header>{this.state.name && item.name }</Card.Header>
-                        <Card.Body>
-                            <Card.Text>
-                            <p>Manufacturer: { this.state.manufacturer && item.manufacturer }</p>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                    <br />
-                    <Link to={{pathname: "/catalogs", item: item}} >
-                        <Button variant="outline-secondary" size="sm">Back</Button>{' '}
-                    </Link>
-                    
-                    
-                </Col>
-        )
+        const item = this.state.item;
+        const otherFields = this.state.otherFields.length > 0 && this.state.otherFields.map(field => {
+            return (
+                <Card.Text className="mt-3">
+                    <b>{ field }</b>: { item[field]  }
+                </Card.Text>
+            )
+        })
 
         return (
             <Row>
-                <Table>
-                    <tbody>
-                        { info }
-                    </tbody>
-                </Table>
+                { item && 
+                <Col sm={12}>
+                    <Card sm={12}>
+                        <Card.Body>
+                            <Card.Title>{ item.name }</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
+                            {/* <Card.Text>
+                                <b>Status</b>: { item.isPrivate ? "Private" : "Public" }
+                            </Card.Text> */}
+
+                        
+                            { otherFields }
+                            
+                        </Card.Body>
+                    </Card>
+                </Col>
+                }
             </Row>
         )
     }
