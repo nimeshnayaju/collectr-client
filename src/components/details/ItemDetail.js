@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import CatalogService from '../../services/CatalogService';
 
 import ItemService from '../../services/ItemService';
 
@@ -50,25 +49,30 @@ export default class ItemDetail extends Component {
                         <Card.Body>
                             <Card.Title>{ item.name }</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
-                            {/* <Card.Text>
-                                <b>Status</b>: { this.state.item.isPrivate ? "Private" : "Public" }
-                            </Card.Text> */}
 
                             <Card.Text className="mt-3">
-                                <p>Date: { item.date }</p>
-                                <p>Condition: { item.condition }</p>
-                                <p>Provenance: { item.provenance }</p>
-                                <p>Description: { item.description }</p>
+                                <p><b>Status:</b> { item.isPrivate ? "Private" : "Public" }</p>
+                                <p><b>Date:</b> { item.date }</p>
+                                <p><b>Condition:</b> { item.condition }</p>
+                                <p><b>Provenance:</b> { item.provenance }</p>
+                                <p><b>Description:</b> { item.description }</p>
                             </Card.Text>
                             { otherFields }
-                            
+                            <Card.Text className="mt-3">
+                                
+                                <Link className="mr-3" to={{pathname: `/items/update/${catalogID}/${item._id}`}} >
+                                    <Button variant="outline-success" size="sm">Update Item</Button>
+                                </Link>
+
+                                <Link to={{pathname: `/catalogs/${catalogID}`}} >
+                                    <Button variant="outline-secondary" size="sm">Go Back</Button>{' '}
+                                </Link>
+                            </Card.Text>
                         </Card.Body>
                     </Card>
 
                     <br />
-                    <Link to={{pathname: `/catalogs/${catalogID}`}} >
-                        <Button variant="outline-secondary" size="sm">Back</Button>{' '}
-                    </Link>
+
                 </Col>
                 }
             </Row>

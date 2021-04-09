@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
 import ItemService from '../../services/ItemService';
 
@@ -7,14 +8,16 @@ export default class ItemDetail extends Component {
 
     state = {
         item: null,
-        otherFields: []
+        otherFields: [],
+        catalogID: null
     }
 
     componentDidMount = async() => {
         if (this.props.match.params.itemId && this.props.match.params.catalogId) {
             const item = await this.getItem(this.props.match.params.itemId);
+            const catalogid = this.props.match.params.catalogId;
             const fields = await ItemService.getItemFields(this.props.match.params.catalogId);
-            this.setState({ item: item, otherFields: fields });
+            this.setState({ item: item, otherFields: fields, catalogID: catalogid});
         }
     }
 
@@ -29,8 +32,9 @@ export default class ItemDetail extends Component {
 
     render() {
         const item = this.state.item;
+        const catalogID = this.state.catalogID;
         const otherFields = this.state.otherFields.length > 0 && this.state.otherFields.map(field => {
-            return (
+             return (
                 <Card.Text className="mt-3">
                     <b>{ field }</b>: { item[field]  }
                 </Card.Text>
@@ -45,13 +49,21 @@ export default class ItemDetail extends Component {
                         <Card.Body>
                             <Card.Title>{ item.name }</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
-                            {/* <Card.Text>
-                                <b>Status</b>: { item.isPrivate ? "Private" : "Public" }
-                            </Card.Text> */}
+                            <Card.Text className="mt-3">
+                                <p><b>Status:</b> { item.isPrivate ? "Private" : "Public" }</p>
+                                <p><b>Date:</b> { item.date }</p>
+                                <p><b>Condition:</b> { item.condition }</p>
+                                <p><b>Provenance:</b> { item.provenance }</p>
+                                <p><b>Description:</b> { item.description }</p>
+                            </Card.Text>
 
-                        
                             { otherFields }
-                            
+
+                            <Card.Text className="mt-3">
+                                <Link to={{pathname: `/catalogs/${catalogID}/public/items`}} >
+                                    <Button variant="outline-secondary" size="sm">Go Back</Button>{' '}
+                                </Link>
+                            </Card.Text>
                         </Card.Body>
                     </Card>
                 </Col>
