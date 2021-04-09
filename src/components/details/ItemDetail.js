@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
+import preImg from '../../background.png';
 import ItemService from '../../services/ItemService';
 
 export default class ItemDetail extends Component {
@@ -10,7 +11,7 @@ export default class ItemDetail extends Component {
         item: null,
         otherFields: [],
         catalogID: null,
-        img: null
+        tempImg: preImg
     }
 
     componentDidMount = async() => {
@@ -33,19 +34,18 @@ export default class ItemDetail extends Component {
 
     decodeBase64Image = async(base64Str) => {
         try{
-            const match = base64Str.match(/^data:([A-Za-z-+\/]+); base64,(.+)$/), // returns null when there's no match
-            response = {};
+            // const findByStr = base64Str.match(/^data:([A-Za-z-+\/]+); base64,(.+)$/), // returns null when there's no match
+            const response = base64Str;
         
-          if (match.length !== 3) {
-            return new Error('not valid base64 string');
-          }
-          response.type = match[1];
-          // response.data = new Buffer(matches[2], 'base64');
-          response.data = Buffer.from(match[2], 'base64')
+        if (response.length !== 1) {
+           return new Error('Invalid buffer string');
+        }
+        //   response.type = findByStr[1];
+        //   response.data = Buffer.from(findByStr[2], 'base64')
         
-          this.setState({ img: response });
-        }catch(e){
-            console.log(e)
+            this.setState({ tempImg: response });
+        }catch(err){
+            console.log(err)
         }
     }
 
@@ -53,7 +53,6 @@ export default class ItemDetail extends Component {
         const item = this.state.item;
         const catalogID = this.state.catalogID;
         const fields = this.state.otherFields;
-        const convertedFile = this.decodeBase64Image(this.state.img);
 
         const otherFields = fields && item && fields.length > 0 && fields.map(field => {
              return (
@@ -69,7 +68,9 @@ export default class ItemDetail extends Component {
                 <Col sm={12}>
                     <Card sm={12}>
                         <Card.Body>
-                            { this.state.img }
+                            <img src={ item.picture || this.state.tempImg } alt="no file chosen" width="200" height="200"></img>
+                            <br/>
+                            <br/>
                             <Card.Title>{ item.name }</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
 

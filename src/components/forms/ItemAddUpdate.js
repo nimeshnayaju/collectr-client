@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Button, Form, FormGroup, FormLabel, FormControl, Row, Col } from 'react-bootstrap';
 
+import preImg from '../../background.png';
 import ItemService from "../../services/ItemService";
 
 export default class ItemAddUpdate extends Component {
@@ -11,7 +12,7 @@ export default class ItemAddUpdate extends Component {
         item: {},
         itemFields: [],
         submitted: false,
-        originImg: null
+        tempImg: preImg
     }
 
     onChange = e => {
@@ -97,7 +98,7 @@ export default class ItemAddUpdate extends Component {
         }
     }
     
-    convertTo64 = async (file) => {
+    encodeTo64 = async (file) => {
         try{
             return new Promise((resolve, reject) => {
                 const fileReader = new FileReader();
@@ -108,41 +109,38 @@ export default class ItemAddUpdate extends Component {
                     resolve(fileReader.result);
                 }
             })
-                // fileReader.onerror = (error)=>{
-                //     reject(error);}
         } catch(err){
             console.log(err);
         }
     }
 
-    decodeBase64Image = async(base64Str) => {
+    decode64Image = async(base64Str) => {
         try{
-            const match = base64Str.match(/^data:([A-Za-z-+\/]+); base64,(.+)$/), // returns null when there's no match
-            response = {};
+            // const findByStr = base64Str.match(/^data:([A-Za-z-+\/]+); base64,(.+)$/), // returns null when there's no match
+            const response = base64Str;
         
-          if (match.length !== 3) {
-            return new Error('Invalid base64 string');
-          }
-          response.type = match[1];
-          // response.data = new Buffer(matches[2], 'base64');
-          response.data = Buffer.from(match[2], 'base64')
+        if (response.length !== 1) {
+           return new Error('Invalid buffer string');
+        }
+        //   response.type = findByStr[1];
+        //   response.data = Buffer.from(findByStr[2], 'base64')
         
-          this.setState({ originImg: response });
-        }catch(e){
-            console.log(e)
+            this.setState({ tempImg: response });
+        }catch(err){
+            console.log(err)
         }
     }
 
-    onChangeImg = async (e) => {
+    onChangeEncodeImg = async (e) => {
         const file = e.target.files[0];
-        const base64File = await this.convertTo64(file);
-        console.log(base64File);
-        await this.setState({originImg: base64File})
+        const base64File = await this.encodeTo64(file);
+        const buffer = Buffer.from(base64File, 'base64'); 
+        console.log(buffer);
+        let item = { picture: buffer };
+        await this.setState({ tempImg: base64File })
     }
 
     render() {
-        const convertedFile = this.decodeBase64Image(this.state.originImg);
-
         if (this.state.submitted) {
             return <Redirect to={{ pathname: `/items/${this.state.catalogId}/${this.state.item._id}`}} />
         }
@@ -154,9 +152,11 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Image</FormLabel>
                     <Col sm="10">
-                        <FormControl required type="file" name="image" onChange ={ (e) =>{ this.onChangeImg(e) }} value = {this.state.item.picture}/>
-                        <br/>
-                        <img src={ this.state.originImg } alt="no file chosen" width="200" height="200" class="img-thumbnail"></img>
+                    <img src={ this.state.tempImg } alt="no file chosen" width="200" height="200" ></img>
+                    <br/>
+                    <br/>
+                    <FormControl required type="file" name="picture" onChange ={ (e) =>{ this.onChangeEncodeImg(e) }} value = { this.state.item.picture }/>
+                     
                     </Col>
                 </FormGroup>
 
