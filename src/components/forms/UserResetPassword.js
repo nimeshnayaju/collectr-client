@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {Row, Col, Button,Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
+import { Row, Col, Button,Form, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 //import { Redirect } from 'react-router';
 
 import "../../App.css";
 import AuthService from "../../services/AuthService";
 
-class UserResetPassword extends Component {
+export default class UserResetPassword extends Component {
     state = {
         password: "",
         submitted: false

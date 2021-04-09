@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Switch, Route, Link, BrowserRouter as Router} from "react-router-dom";
+import { Switch, Route, Link, BrowserRouter as Router } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 
 import "./App.css";
@@ -14,8 +14,10 @@ import ItemAddUpdate from './components/forms/ItemAddUpdate';
 import ItemDetail from './components/details/ItemDetail';
 import UserLogin from './components/forms/UserLogin';
 import UserSignup from "./components/forms/UserSignup";
-import AuthService from "./services/AuthService";
 import UserForgotPassword from "./components/forms/UserForgotPassword";
+import UserResetPassword from "./components/forms/UserResetPassword"
+
+import AuthService from "./services/AuthService";
 
 class App extends Component {
 
@@ -62,10 +64,11 @@ class App extends Component {
                             {/* Content Area */}
                             <Col sm={9}>
                                 <Switch>
-                                    <Route exact path="/" component={Home}/>
-                                    <Route exact path="/login" component={UserLogin}/>
-                                    <Route exact path="/password/forgot" component={UserForgotPassword}/>
-                                    <Route exact path="/signup" component={UserSignup}/>
+                                    <Route exact path="/" component={ Home }/>
+                                    <Route exact path="/login" component={ UserLogin }/>
+                                    <Route exact path="/password/forgot" component={ UserForgotPassword }/>
+                                    <Route exact path="/signup" component={ UserSignup }/>
+                                    <Route exact path="/password/reset" component={ UserResetPassword } />
                                 </Switch>
                             </Col>
                         </Row>
