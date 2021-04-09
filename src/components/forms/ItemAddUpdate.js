@@ -1,15 +1,17 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import { Redirect } from 'react-router';
 import { Button, Form, FormGroup, FormLabel, FormControl, Row, Col } from 'react-bootstrap';
 
 import ItemService from "../../services/ItemService";
 
 export default class ItemAddUpdate extends Component {
+    
     state = {
         catalogId: null,
         item: {},
         itemFields: [],
-        submitted: false
+        submitted: false,
+        originImg: null
     }
 
     onChange = e => {
@@ -96,11 +98,42 @@ export default class ItemAddUpdate extends Component {
     }
 
     render() {
+        const convert64 = async (file) =>{
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(file);
+    
+                // read the file when the file is onLoad
+                fileReader.onload = () => {
+                    resolve(fileReader.result);
+                }
+    
+                fileReader.onerror = ((error)=>{
+                    reject(error);
+                });
+            });
+        }
+    
+        const uploadImg = async (e) => {
+            const file = e.target.files[0];
+            const base64File = await convert64(file);
+            await this.setState({originImg: base64File})
+        }
+
         if (this.state.submitted) {
             return <Redirect to={{ pathname: `/items/${this.state.catalogId}/${this.state.item._id}`}} />
         }
+        
         return (
+            
             <Form autocomplete="off" onSubmit={ this.submitForm }>
+                
+                <FormGroup as={Row}>
+                    <FormLabel column sm="2">Image</FormLabel>
+                    <Col sm="10">
+                        <FormControl required type="file" name="image" onChange ={ (e) =>{ uploadImg(e) }} value = {this.state.item.picture}/>
+                    </Col>
+                </FormGroup>
 
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Name</FormLabel>
@@ -134,7 +167,6 @@ export default class ItemAddUpdate extends Component {
                         </Col>
                     </FormGroup>
                 }) }
-                
                 <Button type="submit">Submit</Button>
 
             </Form>

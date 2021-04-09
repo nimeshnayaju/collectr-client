@@ -43,13 +43,12 @@ export default class ItemDetail extends Component {
                 <Col sm={12}>
                     <Card sm={12}>
                         <Card.Body>
+                            { item.picture }
                             <Card.Title>{ item.name }</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
                             {/* <Card.Text>
                                 <b>Status</b>: { item.isPrivate ? "Private" : "Public" }
                             </Card.Text> */}
-
-                        
                             { otherFields }
                             
                         </Card.Body>
