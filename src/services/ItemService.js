@@ -17,6 +17,7 @@ class ItemService {
             const response = await http.get(`/items/${id}`, {headers: authHeader() });
             return response.data;
         } catch (err) {
+            console.log(err.response);
             console.log(err);
         }
     }

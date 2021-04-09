@@ -27,6 +27,9 @@ export default class CatalogAddUpdate extends Component {
     submitForm = async(e) => {
         e.preventDefault();
         let itemFields = this.state.itemFields.split(",");
+        itemFields = itemFields.filter((field) => {
+            return field.trim() !== ""
+        })
         let data = { name: this.state.name, description: this.state.description, isPrivate: this.state.isPrivate, itemFields: itemFields };
         let catalog;
         if (this.props.location.catalog) {

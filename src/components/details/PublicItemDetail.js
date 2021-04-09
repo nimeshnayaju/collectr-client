@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import ItemService from '../../services/ItemService';
 
-export default class ItemDetail extends Component {
+export default class PublicItemDetail extends Component {
 
     state = {
         item: null,
@@ -33,7 +33,9 @@ export default class ItemDetail extends Component {
     render() {
         const item = this.state.item;
         const catalogID = this.state.catalogID;
-        const otherFields = this.state.otherFields.length > 0 && this.state.otherFields.map(field => {
+        const fields = this.state.otherFields;
+
+        const otherFields = fields && item && fields.length > 0 && fields.map(field => {
              return (
                 <Card.Text className="mt-3">
                     <b>{ field }</b>: { item[field]  }
