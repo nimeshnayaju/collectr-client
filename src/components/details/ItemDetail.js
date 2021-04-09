@@ -9,7 +9,8 @@ export default class ItemDetail extends Component {
     state = {
         item: null,
         otherFields: [],
-        catalogID: null
+        catalogID: null,
+        img: null
     }
 
     componentDidMount = async() => {
@@ -30,10 +31,29 @@ export default class ItemDetail extends Component {
         }
     }
 
+    decodeBase64Image = async(base64Str) => {
+        try{
+            const match = base64Str.match(/^data:([A-Za-z-+\/]+); base64,(.+)$/), // returns null when there's no match
+            response = {};
+        
+          if (match.length !== 3) {
+            return new Error('not valid base64 string');
+          }
+          response.type = match[1];
+          // response.data = new Buffer(matches[2], 'base64');
+          response.data = Buffer.from(match[2], 'base64')
+        
+          this.setState({ img: response });
+        }catch(e){
+            console.log(e)
+        }
+    }
+
     render() {
         const item = this.state.item;
         const catalogID = this.state.catalogID;
         const fields = this.state.otherFields;
+        const convertedFile = this.decodeBase64Image(this.state.img);
 
         const otherFields = fields && item && fields.length > 0 && fields.map(field => {
              return (
@@ -49,7 +69,7 @@ export default class ItemDetail extends Component {
                 <Col sm={12}>
                     <Card sm={12}>
                         <Card.Body>
-                            { item.picture }
+                            { this.state.img }
                             <Card.Title>{ item.name }</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
 

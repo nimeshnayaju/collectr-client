@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Button, Form, FormGroup, FormLabel, FormControl, Row, Col } from 'react-bootstrap';
 
@@ -96,9 +96,9 @@ export default class ItemAddUpdate extends Component {
             await this.setState({ item });
         }
     }
-
-    render() {
-        const convert64 = async (file) =>{
+    
+    convertTo64 = async (file) => {
+        try{
             return new Promise((resolve, reject) => {
                 const fileReader = new FileReader();
                 fileReader.readAsDataURL(file);
@@ -107,19 +107,41 @@ export default class ItemAddUpdate extends Component {
                 fileReader.onload = () => {
                     resolve(fileReader.result);
                 }
-    
-                fileReader.onerror = ((error)=>{
-                    reject(error);
-                });
-            });
+            })
+                // fileReader.onerror = (error)=>{
+                //     reject(error);}
+        } catch(err){
+            console.log(err);
         }
-    
-        const uploadImg = async (e) => {
-            const file = e.target.files[0];
-            const base64File = await convert64(file);
-            console.log(base64File);
-            await this.setState({originImg: base64File})
+    }
+
+    decodeBase64Image = async(base64Str) => {
+        try{
+            const match = base64Str.match(/^data:([A-Za-z-+\/]+); base64,(.+)$/), // returns null when there's no match
+            response = {};
+        
+          if (match.length !== 3) {
+            return new Error('Invalid base64 string');
+          }
+          response.type = match[1];
+          // response.data = new Buffer(matches[2], 'base64');
+          response.data = Buffer.from(match[2], 'base64')
+        
+          this.setState({ originImg: response });
+        }catch(e){
+            console.log(e)
         }
+    }
+
+    onChangeImg = async (e) => {
+        const file = e.target.files[0];
+        const base64File = await this.convertTo64(file);
+        console.log(base64File);
+        await this.setState({originImg: base64File})
+    }
+
+    render() {
+        const convertedFile = this.decodeBase64Image(this.state.originImg);
 
         if (this.state.submitted) {
             return <Redirect to={{ pathname: `/items/${this.state.catalogId}/${this.state.item._id}`}} />
@@ -132,7 +154,9 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Image</FormLabel>
                     <Col sm="10">
-                        <FormControl required type="file" name="image" onChange ={ (e) =>{ uploadImg(e) }} value = {this.state.item.picture}/>
+                        <FormControl required type="file" name="image" onChange ={ (e) =>{ this.onChangeImg(e) }} value = {this.state.item.picture}/>
+                        <br/>
+                        <img src={ this.state.originImg } alt="no file chosen" width="200" height="200" class="img-thumbnail"></img>
                     </Col>
                 </FormGroup>
 
