@@ -117,6 +117,7 @@ export default class ItemAddUpdate extends Component {
         const uploadImg = async (e) => {
             const file = e.target.files[0];
             const base64File = await convert64(file);
+            console.log(base64File);
             await this.setState({originImg: base64File})
         }
 
