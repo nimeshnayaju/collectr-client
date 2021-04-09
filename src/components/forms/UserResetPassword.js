@@ -46,7 +46,7 @@ export default class UserResetPassword extends Component {
                     </Col>
                 </FormGroup>
 
-                <Button type="submit">Send link</Button>
+                <Button type="submit">Reset password</Button>
 
             </Form>
         );
