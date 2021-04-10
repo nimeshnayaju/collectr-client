@@ -45,10 +45,6 @@ export default class ItemDetail extends Component {
         const item = this.state.item;
         const catalogID = this.state.catalogID;
         const fields = this.state.otherFields;
-
-        // this.setState({ tempImg: this.encodeTo64(preImg) }); // set the inital file picture
-        // console.log(this.state.tempImg)
-
         const otherFields = fields && item && fields.length > 0 && fields.map(field => {
              return (
                 <Card.Text className="mt-3">
@@ -63,8 +59,7 @@ export default class ItemDetail extends Component {
                 <Col sm={12}>
                     <Card sm={12}>
                         <Card.Body>
-                            {/* <img src={ item.picture || this.state.tempImg } alt="no file chosen" width="200" height="200"></img> */}
-                            <img src={ {uri: `data:image/jpeg;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`}  } alt="no file chosen" width="200" height="200" />
+                            <img src={ `data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`} alt="no file chosen" width="200" height="200" />
                             <br/>
                             <br/>
                             <Card.Title>{ item.name }</Card.Title>

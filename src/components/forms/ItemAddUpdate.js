@@ -149,10 +149,10 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Image</FormLabel>
                     <Col sm="10">
-                    <img src={`data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`} alt="no file chosen" width="200" height="200" key=""/>
+                    <img src={`data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`} alt="no file chosen" width="200" height="200" />
                     <br/>
                     <br/>
-                    <FormControl required type="file" accept="image/*" name="picture" onChange ={ (e) =>{ this.onChangeEncode(e) }} />
+                    <FormControl type="file" accept="image/*" name="picture" onChange ={ (e) =>{ this.onChangeEncode(e) }}/>
                     </Col>
                 </FormGroup>
 
