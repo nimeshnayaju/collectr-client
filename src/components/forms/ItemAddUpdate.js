@@ -12,7 +12,7 @@ export default class ItemAddUpdate extends Component {
         item: {},
         itemFields: [],
         submitted: false,
-        tempImg: preImg
+        tempImg: ''
     }
 
     onChange = e => {
@@ -98,7 +98,7 @@ export default class ItemAddUpdate extends Component {
         }
     }
     
-    encodeTo64 = async (file) => {
+    getFile = async (file) => {
         try{
             return new Promise((resolve, reject) => {
                 const fileReader = new FileReader();
@@ -106,7 +106,8 @@ export default class ItemAddUpdate extends Component {
     
                 // read the file when the file is onLoad
                 fileReader.onload = () => {
-                    resolve(fileReader.result);
+                    resolve(fileReader.result.split(',')[1]); // extract only the content url
+                    // console.log(fileReader.result)
                 }
             })
         } catch(err){
@@ -114,33 +115,29 @@ export default class ItemAddUpdate extends Component {
         }
     }
 
-    decode64Image = async(base64Str) => {
+    onChangeEncode = async(e) => {
+        const file = e.target.files[0];
+        const base64String = await this.getFile(file); // from file to string
+        const buffer = Buffer.from(base64String, "base64"); // from string to base64
+        // this.setState({ [e.target.name]: buffer }) // update the buffer to databasae
+
+        let item = this.state.item;
+        item[e.target.name] = buffer;
+        this.setState({ item: item });
+    }
+
+    decodeBase64Image = e => {
         try{
-            // const findByStr = base64Str.match(/^data:([A-Za-z-+\/]+); base64,(.+)$/), // returns null when there's no match
-            const response = base64Str;
-        
-        if (response.length !== 1) {
-           return new Error('Invalid buffer string');
-        }
-        //   response.type = findByStr[1];
-        //   response.data = Buffer.from(findByStr[2], 'base64')
-        
-            this.setState({ tempImg: response });
+            const base64 = e.toString('base64')
+            return base64;
         }catch(err){
             console.log(err)
         }
     }
 
-    onChangeEncodeImg = async (e) => {
-        const file = e.target.files[0];
-        const base64File = await this.encodeTo64(file);
-        const buffer = Buffer.from(base64File, 'base64'); 
-        console.log(buffer);
-        let item = { picture: buffer };
-        await this.setState({ tempImg: base64File })
-    }
 
     render() {
+        
         if (this.state.submitted) {
             return <Redirect to={{ pathname: `/items/${this.state.catalogId}/${this.state.item._id}`}} />
         }
@@ -152,11 +149,12 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Image</FormLabel>
                     <Col sm="10">
-                    <img src={ this.state.tempImg } alt="no file chosen" width="200" height="200" ></img>
                     <br/>
                     <br/>
-                    <FormControl required type="file" name="picture" onChange ={ (e) =>{ this.onChangeEncodeImg(e) }} value = { this.state.item.picture }/>
-                     
+                    <FormControl required type="file" accept="image/*" name="picture" onChange ={ (e) =>{ this.onChangeEncode(e) }} />
+                    {/* { console.log(this.state.item.picture) }
+                    { this.decodeBase64Image(this.state.item.picture))} */}
+                    <img src={ {uri: `data:image/jpeg;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`}  } alt="no file chosen" width="200" height="200" />
                     </Col>
                 </FormGroup>
 

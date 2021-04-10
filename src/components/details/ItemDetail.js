@@ -32,18 +32,10 @@ export default class ItemDetail extends Component {
         }
     }
 
-    decodeBase64Image = async(base64Str) => {
+    decodeBase64Image = e => {
         try{
-            // const findByStr = base64Str.match(/^data:([A-Za-z-+\/]+); base64,(.+)$/), // returns null when there's no match
-            const response = base64Str;
-        
-        if (response.length !== 1) {
-           return new Error('Invalid buffer string');
-        }
-        //   response.type = findByStr[1];
-        //   response.data = Buffer.from(findByStr[2], 'base64')
-        
-            this.setState({ tempImg: response });
+            const base64 = e.toString('base64')
+            return base64;
         }catch(err){
             console.log(err)
         }
@@ -53,6 +45,9 @@ export default class ItemDetail extends Component {
         const item = this.state.item;
         const catalogID = this.state.catalogID;
         const fields = this.state.otherFields;
+
+        // this.setState({ tempImg: this.encodeTo64(preImg) }); // set the inital file picture
+        // console.log(this.state.tempImg)
 
         const otherFields = fields && item && fields.length > 0 && fields.map(field => {
              return (
@@ -68,7 +63,8 @@ export default class ItemDetail extends Component {
                 <Col sm={12}>
                     <Card sm={12}>
                         <Card.Body>
-                            <img src={ item.picture || this.state.tempImg } alt="no file chosen" width="200" height="200"></img>
+                            {/* <img src={ item.picture || this.state.tempImg } alt="no file chosen" width="200" height="200"></img> */}
+                            <img src={ {uri: `data:image/jpeg;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`}  } alt="no file chosen" width="200" height="200" />
                             <br/>
                             <br/>
                             <Card.Title>{ item.name }</Card.Title>
