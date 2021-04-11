@@ -121,7 +121,6 @@ export default class ItemAddUpdate extends Component {
         // this.setState({ [e.target.name]: buffer }) // update the buffer to databasae
 
         let item = this.state.item;
-        console.log(buffer);
         item[e.target.name] = buffer;
         this.setState({ item: item });
     }
