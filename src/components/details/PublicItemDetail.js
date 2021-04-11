@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import ItemService from '../../services/ItemService';
 
-export default class ItemDetail extends Component {
+export default class PublicItemDetail extends Component {
 
     state = {
         item: null,
@@ -51,7 +51,6 @@ export default class ItemDetail extends Component {
                         <Card.Body>
                             <Card.Title>{ item.name }</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
-
                             <Card.Text className="mt-3">
                                 <p><b>Status:</b> { item.isPrivate ? "Private" : "Public" }</p>
                                 <p><b>Date:</b> { item.date }</p>
@@ -59,22 +58,16 @@ export default class ItemDetail extends Component {
                                 <p><b>Provenance:</b> { item.provenance }</p>
                                 <p><b>Description:</b> { item.description }</p>
                             </Card.Text>
-                            { otherFields }
-                            <Card.Text className="mt-3">
-                                
-                                <Link className="mr-3" to={{pathname: `/items/update/${catalogID}/${item._id}`}} >
-                                    <Button variant="outline-success" size="sm">Update Item</Button>
-                                </Link>
 
-                                <Link to={{pathname: `/catalogs/${catalogID}`}} >
+                            { otherFields }
+
+                            <Card.Text className="mt-3">
+                                <Link to={{pathname: `/catalogs/${catalogID}/public/items`}} >
                                     <Button variant="outline-secondary" size="sm">Go Back</Button>{' '}
                                 </Link>
                             </Card.Text>
                         </Card.Body>
                     </Card>
-
-                    <br />
-
                 </Col>
                 }
             </Row>

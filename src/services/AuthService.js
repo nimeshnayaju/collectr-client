@@ -7,7 +7,8 @@ class UserService {
             const response = await http.post("/users/signup", data);
             return response.data;
         } catch (err) {
-            console.log(err);
+            console.log(err.response);
+            return err.response.data;
         }
     }
 
@@ -20,7 +21,8 @@ class UserService {
             }
             return response.data;
         } catch (err) {
-            console.log(err);
+            console.log(err.response);
+            return err.response.data;
         }
     }
 
