@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Row, Col, Card, Button, Image } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import preImg from '../../background.png';
@@ -10,8 +10,7 @@ export default class ItemDetail extends Component {
     state = {
         item: null,
         otherFields: [],
-        catalogID: null,
-        tempImg: preImg
+        catalogID: null
     }
 
     componentDidMount = async() => {
@@ -29,17 +28,6 @@ export default class ItemDetail extends Component {
             return item;
         } catch (err) {
             console.log(err);
-        }
-    }
-
-    decodeBase64Image = e => {
-        try{
-            console.log(e);
-            const base64 = e.toString('base64');
-            console.log(base64);
-            return base64;
-        }catch(err){
-            console.log(err)
         }
     }
 
@@ -61,11 +49,11 @@ export default class ItemDetail extends Component {
                 <Col sm={12}>
                     <Card sm={12}>
                         <Card.Body>
-                            { this.state.item.picture && 
-                                <img src={`data:${this.state.item.picture.mimetype};base64,${Buffer.from(this.state.item.picture.data).toString('base64')}`}/>
-                                // <img src={ `data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture.data)}`} alt="no file chosen" width="200" height="200" />
+                            <Col className="mx-auto" xs={12} sm={4}>
+                            { item.picture && 
+                                <Image fluid rounded src={`data:image/*;base64,${Buffer.from(item.picture.data).toString('base64')}`}/>
                             }
-
+                            </Col>
                             
                             <br/>
                             <Card.Title>{ item.name }</Card.Title>

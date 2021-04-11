@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
-import { Button, Form, FormGroup, FormLabel, FormControl, Row, Col } from 'react-bootstrap';
+import { Button, Form, Image, FormGroup, FormLabel, FormControl, Row, Col } from 'react-bootstrap';
 
-import preImg from '../../background.png';
 import ItemService from "../../services/ItemService";
 
 export default class ItemAddUpdate extends Component {
@@ -122,16 +121,20 @@ export default class ItemAddUpdate extends Component {
         // this.setState({ [e.target.name]: buffer }) // update the buffer to databasae
 
         let item = this.state.item;
+        console.log(buffer);
         item[e.target.name] = buffer;
         this.setState({ item: item });
     }
 
     decodeBase64Image = e => {
         try{
-            console.log(e);
-            const base64 = e.toString('base64');
-            console.log(base64);
-            return base64;
+            if (e.type === "Buffer") {
+                return Buffer.from(e.data).toString('base64');
+            } else {
+                const base64 = e.toString('base64');
+                return base64;
+            }
+
         }catch(err){
             console.log(err)
         }
@@ -140,83 +143,88 @@ export default class ItemAddUpdate extends Component {
 
     render() {
         
+        const { item } = this.state;
+
         if (this.state.submitted) {
-            return <Redirect to={{ pathname: `/items/${this.state.catalogId}/${this.state.item._id}`}} />
+            return <Redirect to={{ pathname: `/items/${this.state.catalogId}/${item._id}`}} />
         }
         
+
         return (
-            
-            <Form autocomplete="off" onSubmit={ this.submitForm }>
-                
-                <FormGroup as={Row}>
-                    <FormLabel column sm="2">Image</FormLabel>
-                    <Col sm="10">
-                        { this.state.item.picture ? 
-                            <img src={`data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`} alt="no file chosen" width="200" height="200" />
-                            : null
-                        }
-                    <br/>
-                    <br/>
-                    <FormControl type="file" accept="image/*" name="picture" onChange ={ (e) =>{ this.onChangeEncode(e) }}/>
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row}>
-                    <FormLabel column sm="2">Name</FormLabel>
-                    <Col sm="10">
-                        <FormControl required type="text" name="name" onChange={ this.onChange } value={this.state.item.name } />
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row}>
-                    <FormLabel column sm="2">Date</FormLabel>
-                    <Col sm="10">
-                        <FormControl type="text" name="date" onChange={ this.onChange } value={this.state.item.date} />
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row}>
-                    <FormLabel column sm="2">Condition</FormLabel>
-                    <Col sm="10">
-                        <FormControl type="text" name="condition" onChange={ this.onChange } value={this.state.item.condition} />
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row}>
-                    <FormLabel column sm="2">Provenance</FormLabel>
-                    <Col sm="10">
-                        <FormControl type="text" name="provenance" onChange={ this.onChange } value={this.state.item.provenance} />
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row}>
-                    <FormLabel column sm="2">Description</FormLabel>
-                    <Col sm="10">
-                        <FormControl type="text" name="description" onChange={ this.onChange } value={this.state.item.description } />
-                    </Col>
-                </FormGroup>
-
-                <FormGroup as={Row}>
-                <FormLabel column sm="2">Private</FormLabel>
-                    <Col sm="10">
-                        <FormControl onChange={ this.onChangeSelect } value={ this.state.item.isPrivate } as="select">
-                            <option data-id="true">true</option>
-                            <option data-id="false">false</option>
-                        </FormControl>
-                    </Col>
-                </FormGroup>
-
-                { this.state.itemFields.length > 0 && this.state.itemFields.map((field) => {
-                    return <FormGroup as={Row}>
-                        <FormLabel column sm="2">{ field }</FormLabel>
-                        <Col sm="10">
-                            <FormControl type="text" name={field} onChange={ this.onChange } value={this.state.item[field]} />
+            <Col>
+            { item && 
+                <Form autocomplete="off" onSubmit={ this.submitForm }>
+                    <FormGroup as={Row}>
+                        <FormLabel column sm="2">Image</FormLabel>
+                        <Col md={4}>
+                            { item.picture ? 
+                                // <Image fluid rounded className="item-image" src={`data:image/*;base64,${Buffer.from(item.picture.data).toString('base64')}`}/>
+                                // : <p>No picture selected</p>
+                                <Image fluid rounded src={`data:image/*;base64,${this.decodeBase64Image(this.state.item.picture)}`} />
+                            : <p>No image selected</p> }
+                        </Col>
+                        <Col md={6}>
+                            <Form.File className="float-right" type="file" accept="image/*" name="picture" onChange ={ (e) =>{ this.onChangeEncode(e) }}/>
                         </Col>
                     </FormGroup>
-                }) }
-                <Button type="submit">Submit</Button>
 
-            </Form>
+                    <FormGroup as={Row}>
+                        <FormLabel column sm="2">Name</FormLabel>
+                        <Col sm="10">
+                            <FormControl required type="text" name="name" onChange={ this.onChange } value={item.name } />
+                        </Col>
+                    </FormGroup>
+
+                    <FormGroup as={Row}>
+                        <FormLabel column sm="2">Date</FormLabel>
+                        <Col sm="10">
+                            <FormControl type="text" name="date" onChange={ this.onChange } value={item.date} />
+                        </Col>
+                    </FormGroup>
+
+                    <FormGroup as={Row}>
+                        <FormLabel column sm="2">Condition</FormLabel>
+                        <Col sm="10">
+                            <FormControl type="text" name="condition" onChange={ this.onChange } value={item.condition} />
+                        </Col>
+                    </FormGroup>
+
+                    <FormGroup as={Row}>
+                        <FormLabel column sm="2">Provenance</FormLabel>
+                        <Col sm="10">
+                            <FormControl type="text" name="provenance" onChange={ this.onChange } value={item.provenance} />
+                        </Col>
+                    </FormGroup>
+
+                    <FormGroup as={Row}>
+                        <FormLabel column sm="2">Description</FormLabel>
+                        <Col sm="10">
+                            <FormControl type="text" name="description" onChange={ this.onChange } value={item.description } />
+                        </Col>
+                    </FormGroup>
+
+                    <FormGroup as={Row}>
+                    <FormLabel column sm="2">Private</FormLabel>
+                        <Col sm="10">
+                            <FormControl onChange={ this.onChangeSelect } value={ item.isPrivate } as="select">
+                                <option data-id="true">true</option>
+                                <option data-id="false">false</option>
+                            </FormControl>
+                        </Col>
+                    </FormGroup>
+
+                    { this.state.itemFields && this.state.itemFields.length > 0 && this.state.itemFields.map((field) => {
+                        return <FormGroup as={Row}>
+                            <FormLabel column sm="2">{ field }</FormLabel>
+                            <Col sm="10">
+                                <FormControl type="text" name={field} onChange={ this.onChange } value={item[field]} />
+                            </Col>
+                        </FormGroup>
+                    }) }
+                    <Button type="submit">Submit</Button>
+                </Form>
+            }
+            </Col>
         )
     }
 }
