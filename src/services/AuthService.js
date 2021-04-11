@@ -36,7 +36,7 @@ class UserService {
 
     forgotPassword = async (data) => {
         try {
-            const response = await http.post("/password/forgot", data);
+            const response = await http.post("users/password/forgot", data);
             return response.data;
         } catch (err) {
             console.log(err);
@@ -45,7 +45,7 @@ class UserService {
 
     resetPassword = async (data) => {
         try {
-            const response = await http.post("/password/reset", data);
+            const response = await http.post("users/password/reset", data);
             return response.data;
         } catch (err) {
             console.log(err);

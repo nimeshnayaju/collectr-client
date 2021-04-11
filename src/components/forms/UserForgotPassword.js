@@ -23,7 +23,6 @@ export default class UserForgotPassword extends Component {
             if (response) {
                 this.setState({ submitted: true });
             }
-            window.location.reload();
         } catch (err) {
             console.log(err);
         }
@@ -38,7 +37,7 @@ export default class UserForgotPassword extends Component {
         return (
 
             <Form autocomplete="off" onSubmit={ this.handleForgotPassword }>
-                <h2>Forgot your password? Enter your email below and you should receive a link to reset your password.</h2>
+                <h5>Forgot your password? Enter your email below and you should receive a link to reset your password.</h5>
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Email</FormLabel>
                     <Col sm="10">
