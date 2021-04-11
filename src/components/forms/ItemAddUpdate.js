@@ -128,7 +128,9 @@ export default class ItemAddUpdate extends Component {
 
     decodeBase64Image = e => {
         try{
-            const base64 = e.toString('base64')
+            console.log(e);
+            const base64 = e.toString('base64');
+            console.log(base64);
             return base64;
         }catch(err){
             console.log(err)
@@ -149,7 +151,10 @@ export default class ItemAddUpdate extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Image</FormLabel>
                     <Col sm="10">
-                    <img src={`data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`} alt="no file chosen" width="200" height="200" />
+                        { this.state.item.picture ? 
+                            <img src={`data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`} alt="no file chosen" width="200" height="200" />
+                            : null
+                        }
                     <br/>
                     <br/>
                     <FormControl type="file" accept="image/*" name="picture" onChange ={ (e) =>{ this.onChangeEncode(e) }}/>

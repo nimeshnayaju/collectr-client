@@ -34,7 +34,9 @@ export default class ItemDetail extends Component {
 
     decodeBase64Image = e => {
         try{
-            const base64 = e.toString('base64')
+            console.log(e);
+            const base64 = e.toString('base64');
+            console.log(base64);
             return base64;
         }catch(err){
             console.log(err)
@@ -59,8 +61,12 @@ export default class ItemDetail extends Component {
                 <Col sm={12}>
                     <Card sm={12}>
                         <Card.Body>
-                            <img src={ `data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture)}`} alt="no file chosen" width="200" height="200" />
-                            <br/>
+                            { this.state.item.picture && 
+                                <img src={`data:${this.state.item.picture.mimetype};base64,${Buffer.from(this.state.item.picture.data).toString('base64')}`}/>
+                                // <img src={ `data:image/*;base64,${this.state.item.picture && this.decodeBase64Image(this.state.item.picture.data)}`} alt="no file chosen" width="200" height="200" />
+                            }
+
+                            
                             <br/>
                             <Card.Title>{ item.name }</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted"> { item.description }</Card.Subtitle>
