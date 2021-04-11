@@ -64,7 +64,6 @@ export default class ItemDetail extends Component {
                                 <p><b>Date:</b> { item.date }</p>
                                 <p><b>Condition:</b> { item.condition }</p>
                                 <p><b>Provenance:</b> { item.provenance }</p>
-                                <p><b>Description:</b> { item.description }</p>
                             </Card.Text>
                             { otherFields }
                             <Card.Text className="mt-3">

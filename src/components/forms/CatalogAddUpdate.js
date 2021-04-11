@@ -108,11 +108,11 @@ export default class CatalogAddUpdate extends Component {
                 </FormGroup>
 
                 <FormGroup as={Row}>
-                    <FormLabel column sm="2">Item fields</FormLabel>
+                    <FormLabel column sm="2">Extra item fields</FormLabel>
                     <Col sm="10">
                         <FormControl placeholder="Use comma to separate the fields" type="text" name="itemFields" onChange={ this.onChange } value={ this.state.itemFields } />
                         <Form.Text muted>
-                            All catalog items have the basic fields: <b>name, description, date, isPrivate, provenance, condition</b>. The above entered fields will be inherited by all items inside of this catalog.
+                            All catalog items have the basic fields: <b>name, data, condition, provenance, description, isPrivate, image</b>. The above entered fields will be inherited by all items inside of this catalog.
                         </Form.Text>
                     </Col>
                     
