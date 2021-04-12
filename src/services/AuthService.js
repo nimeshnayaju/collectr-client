@@ -26,16 +26,34 @@ class UserService {
         }
     }
 
-    logout = async (data) => {
+    logout = async () => {
         localStorage.removeItem('AUTH_TOKEN');
     }
 
     isLoggedIn = () => {
         const token = JSON.parse(localStorage.getItem('AUTH_TOKEN'));
-        if (token) {
-            return true;
+        return !!token; // return true if token found, false otherwise
+
+    }
+
+    forgotPassword = async (data) => {
+        try {
+            const response = await http.post("users/password/forgot", data);
+            return response.data;
+        } catch (err) {
+            console.log(err);
+            return err.response.data;
         }
-        return false;
+    }
+
+    resetPassword = async (data) => {
+        try {
+            const response = await http.post("users/password/reset", data);
+            return response.data;
+        } catch (err) {
+            console.log(err.response);
+            return err.response.data;
+        }
     }
 }
 
