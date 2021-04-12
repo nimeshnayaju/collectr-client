@@ -5,7 +5,7 @@
 - [React](https://reactjs.org/)
 - [React Bootstrap](https://react-bootstrap.github.io/)
 - [React Router](https://reactrouter.com/)  
-- [axios](https://axios-http.com/)
+- [Axios](https://axios-http.com/)
 
 ## Installation and usage
 
