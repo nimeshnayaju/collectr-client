@@ -47,16 +47,16 @@ class App extends Component {
                                         <hr />
                                     </li>
                                     <li>
-                                        <Link to="/login">Log in</Link>
+                                        <Link to="/login">Log In</Link>
                                     </li>
                                     <li>
-                                        <Link to="/password/forgot">Forgot password?</Link>
+                                        <Link to="/password/forgot">Forgot Password</Link>
                                     </li>
                                     <li>
                                         <hr />
                                     </li>
                                     <li>
-                                        <Link to="/signup">Sign up</Link>
+                                        <Link to="/signup">Sign Up</Link>
                                     </li>
 
                                 </ul>
@@ -90,19 +90,19 @@ class App extends Component {
                                     <Link to="/">Home</Link>
                                 </li>
                                 <li>
-                                    <Link to="/catalogs">User's catalogs</Link>
+                                    <Link to="/catalogs">User's Catalogs</Link>
                                 </li>
                                 <li>
-                                    <Link to={{pathname: "/catalogs/public", public: true }}>All public catalogs</Link>
+                                    <Link to={{pathname: "/catalogs/public", public: true }}>All Public Catalogs</Link>
                                 </li>
                                 <li>
                                     <hr />
                                 </li>
                                 <li>
-                                    <Link to="/catalogs/add">Add catalog</Link>
+                                    <Link to="/catalogs/add">Add Catalog</Link>
                                 </li>
                                 <li>
-                                    <a href="/login" onClick={this.logout}>Log out</a>
+                                    <a href="/login" onClick={this.logout}>Log Out</a>
                                 </li>
                             </ul>
                         </Col>
