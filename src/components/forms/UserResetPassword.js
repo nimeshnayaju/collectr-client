@@ -63,7 +63,7 @@ export default class UserResetPassword extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Password</FormLabel>
                     <Col sm="10">
-                        <FormControl type="password" name="password" onChange={ this.onChange } value={this.state.password} />
+                        <FormControl required type="password" name="password" onChange={ this.onChange } value={this.state.password} />
                     </Col>
                 </FormGroup>
 

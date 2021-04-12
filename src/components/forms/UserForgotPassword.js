@@ -51,7 +51,7 @@ export default class UserForgotPassword extends Component {
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Email</FormLabel>
                     <Col sm="10">
-                        <FormControl type="email" name="email" onChange={ this.onChange } value={this.state.email} />
+                        <FormControl required type="email" name="email" onChange={ this.onChange } value={this.state.email} />
                     </Col>
                 </FormGroup>
 
