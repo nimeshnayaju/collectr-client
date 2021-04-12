@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { Row, Col, Button,Form, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
-//import { Redirect } from 'react-router';
+import { Row, Modal, Col, Button,Form, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import queryString from 'query-string';
 
 import "../../App.css";
 import AuthService from "../../services/AuthService";
@@ -8,37 +8,58 @@ import AuthService from "../../services/AuthService";
 export default class UserResetPassword extends Component {
     state = {
         password: "",
-        submitted: false
+        user: "",
+        token: "",
+        submitted: false,
+        message: ""
     }
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     }
 
+    componentDidMount = async() => {
+        let params = queryString.parse(this.props.location.search);
+        if (params.userId && params.token) {
+            const token = params.token;
+            const userId = params.userId;
+
+            this.setState({token, userId});
+        } 
+    }
+
     handleForgotPassword = async (e) => {
         e.preventDefault();
         try {
-            let data = { email: this.state.password };
+            let data = { token: this.state.token, userId: this.state.userId, password: this.state.password };
             const response = await AuthService.resetPassword(data);
-            if (response) {
-                this.setState({ submitted: true });
-            }
-            window.location.reload();
+            this.setState({ submitted: true, password: "", message: response.message || response.password });
         } catch (err) {
             console.log(err);
         }
     }
 
     render() {
-        if (this.state.submitted) {
-            return (
-                <h2>Submission successful, you may now log in with your new password.</h2>
-            );
-        }
+
+        const forgotPasswordMoal = this.state.submitted ?
+        <Modal.Dialog>
+            <Modal.Header>
+                <Modal.Title>Password Reset</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+                <p>{ this.state.message }</p>
+            </Modal.Body>
+            
+        </Modal.Dialog> : null;
+
         return (
 
             <Form autocomplete="off" onSubmit={ this.handleForgotPassword }>
-                <h2>Please enter a new password below.</h2>
+
+                { forgotPasswordMoal }
+
+                <h5>Please enter a new password below.</h5>
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Password</FormLabel>
                     <Col sm="10">

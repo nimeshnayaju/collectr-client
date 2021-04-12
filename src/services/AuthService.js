@@ -42,6 +42,7 @@ class UserService {
             return response.data;
         } catch (err) {
             console.log(err);
+            return err.response.data;
         }
     }
 
@@ -50,7 +51,8 @@ class UserService {
             const response = await http.post("users/password/reset", data);
             return response.data;
         } catch (err) {
-            console.log(err);
+            console.log(err.response);
+            return err.response.data;
         }
     }
 }

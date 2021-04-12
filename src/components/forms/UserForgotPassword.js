@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Col, Button,Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
+import {Row, Col, Modal, Button,Form, FormGroup, FormControl, FormLabel} from 'react-bootstrap';
 //import { Redirect } from 'react-router';
 
 import "../../App.css";
@@ -8,7 +8,8 @@ import AuthService from "../../services/AuthService";
 export default class UserForgotPassword extends Component {
     state = {
         email: "",
-        submitted: false
+        submitted: false,
+        message: ""
     }
 
     onChange = e => {
@@ -20,23 +21,32 @@ export default class UserForgotPassword extends Component {
         try {
             let data = { email: this.state.email };
             const response = await AuthService.forgotPassword(data);
-            if (response) {
-                this.setState({ submitted: true });
-            }
+            console.log(response);
+            this.setState({ email: "", submitted: true, message: response.message });
         } catch (err) {
             console.log(err);
         }
     }
 
     render() {
-        if (this.state.submitted) {
-            return (
-                <h2>Submission successful, your link should arrive shortly.</h2>
-            )
-        }
+        const forgotPasswordModal = this.state.submitted ?
+        <Modal.Dialog>
+            <Modal.Header>
+                <Modal.Title>Forgot Password</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+                <p>{ this.state.message }</p>
+            </Modal.Body>
+            
+        </Modal.Dialog> : null;
+
         return (
 
             <Form autocomplete="off" onSubmit={ this.handleForgotPassword }>
+
+                { forgotPasswordModal }
+
                 <h5>Forgot your password? Enter your email below and you should receive a link to reset your password.</h5>
                 <FormGroup as={Row}>
                     <FormLabel column sm="2">Email</FormLabel>

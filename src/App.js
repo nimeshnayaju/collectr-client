@@ -69,7 +69,7 @@ class App extends Component {
                                     <Route exact path="/login" component={ UserLogin }/>
                                     <Route exact path="/password/forgot" component={ UserForgotPassword }/>
                                     <Route exact path="/signup" component={ UserSignup }/>
-                                    <Route exact path="/password/reset" component={ UserResetPassword } />
+                                    <Route path="/reset" component={ UserResetPassword } />
                                 </Switch>
                             </Col>
                         </Row>
