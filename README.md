@@ -1,4 +1,4 @@
-# Client for Collectr
+# Frontend Client for Collectr
 
 ## Technologies
 
